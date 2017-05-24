@@ -2,7 +2,7 @@
 /*
  * модель работы со статьями
  */
-    include_once 'db.php';
+    include_once 'model/db.php';
 
     /* вывод всех статей */
     function get_all_articles () {

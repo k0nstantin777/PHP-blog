@@ -21,11 +21,11 @@
                                         <div class="current_user"><span>User <span class="fa fa-user fa-fw"></span></span> : <i> <?=$user?></i></div>
                                         <div id="user_menu">
                                             <div class="user_menu"><a href="<?=BASE_PATH?>login">
-                                            <? if ($login === true):?>
+                                            <?php if ($login === true):?>
                                                     Выйти</a> 
-                                            <? else: ?>
+                                            <?php else: ?>
                                                 Вход </a><span>|</span><a href="<?=BASE_PATH?>reg"> Регистрация</a>  
-                                            <? endif;?> 
+                                            <?php endif;?> 
                                             </div>
                                         </div>     
                                 </div>
@@ -38,9 +38,9 @@
                                                     <a href="<?=BASE_PATH?>"><li><i class="fa fa-home fa-fw"></i> Главная</li></a>
                                                     <a href="<?=BASE_PATH?>posts"><li><i class="fa fa-file-text fa-fw"></i> Список статей <i class="fa fa-angle-down fa-fw"></i>
                                                         <ul>
-                                                            <? foreach($articles as $article): ?>
+                                                            <?php foreach($articles as $article): ?>
                                                             <a href="<?=BASE_PATH?>post/<?= $article['id_article']?>"><li><?= $article['title'] ?></li></a>
-                                                            <? endforeach; ?>
+                                                            <?php endforeach; ?>
                                                         </ul>
                                                     </li></a>
                                                     <a href="<?=BASE_PATH?>contacts"><li><i class="fa fa-phone fa-fw"></i>Контакты</li></a>
