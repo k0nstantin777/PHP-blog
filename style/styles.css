@@ -1,0 +1,145 @@
+/* @ Серёгин сброс стилей @ */
+
+body,div,dl,dt,dd,ul,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img,abbr{border:0;}address,caption,cite,code,dfn,em,strong,th,var {font-style:normal;font-weight:normal;}ul li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}sup{vertical-align:text-top;}sub{vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}legend{color:#000;}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section {display:block;}
+
+:-ms-input-placeholder{color:#757575;}
+:-webkit-input-placeholder{color:#757575;}
+
+html, body{height:100%; font-family:OpenSans-Regular, Arial; font-size:15px; color:#000;}
+a{text-decoration:none; outline:none;}
+a:hover {color: #6699ff; transition: 0.4s ease-in-out }
+a img{border:none; outline:none;}
+ul{list-style:none; position: relative}
+p{margin:0 0 14px}
+.p {margin: 10px 0 0 0}
+input {border-radius: 4px}
+textarea {border-radius: 4px}
+
+/* End of @ Серёгин сброс стилей @ */
+
+/* @ Полезные мелочи @ */
+
+.clear{clear: both;}
+
+/* End of @Полезные мелочи @ */
+
+/* @ базовая разметка @ */
+
+#wrapper{width: 100%; min-height: 100%; position: relative;}
+.line{width: 100%;}
+.wrapper{max-width: 920px; margin: 0 auto; height: 100%; position: relative; padding: 0 20px; 
+    display: flex;}
+span.h3{display: inline-block; font-size: 18px; padding: 0 0;}
+span.h1{display: inline-block; font-size: 24px; padding: 10px 0;}
+span.option{display: inline-block; font-size: 10px; padding: 5px 0;}
+
+/* @ End of базовая разметка @ */
+
+/*.header{height: 150px; background: #0D759D;}*/
+.header{height: 200px; background: url(img/header.jpg) center no-repeat; background-size: 100%;}
+.menu{height: 50px; background: #044B66;}
+.content{padding: 10px 0 60px 0}
+.footer{height: 50px; background: #044B66; position: absolute; left: 0; bottom: 0; width: 100%;}
+section .right {width: auto; max-width: 70%; display: inline-block; margin-left: 15px}
+
+
+header{color: #fff;}
+header .logo{width: 140px; height: 123px; background: url(img/blog_logo.gif) center no-repeat; background-size: 100%; margin-top: 40px;}
+header .slogan{position: absolute; left: 170px; top: 60px;}
+header .slogan .title{font-size: 30px; padding: 10px 0;}
+header .slogan .subtitle{font-size: 16px; font-style: italic;}
+header .phone{font-size: 25px; position: absolute; right: 20px; top: 50px;}
+header .current_user {font-size: 12px; position: absolute; right: 0; top:20px; padding: 5px; }
+header .current_user span {font-size: 10px; background-color: #6666ff; padding: 5px; border-radius: 4px}
+header .current_user i {font-size: 12px; background-color: #3399ff; padding: 5px; border-radius: 4px }
+header .user_menu{font-size: 12px; position: absolute; right: 0; top:55px;}
+header .user_menu a {font-size: 12px; color: #fff; padding: 5px}
+header .user_menu a:hover {font-size: 12px; color: #6699ff;}
+header .user_menu span {font-size: 12px;}
+
+
+header nav a{color: inherit; }
+header nav a:hover {color:#fff}
+header nav li:hover {background-color: #3366ff}
+header nav li{display: inline-block; height: 50px; line-height: 50px; font-size: 14px; padding: 0 20px; background-color: #044B66; transition: 0.6s;}
+header nav .show_menu {display: none;}
+header nav ul ul {opacity: 0; position: absolute; z-index: 10; text-align:left; visibility: hidden; margin: 0 0 0 -20px;}
+header nav li:hover ul {opacity: 1; transition: 0.6s ease-in-out; visibility: visible}
+header nav ul ul li {width:auto; float:none; display:list-item; position: relative; color: #fff;}
+
+
+.content .stars{margin: 10px auto;}
+.content .stars .item{float: left; width: 200px; height: 200px; margin: 10px 10px; text-align: center;
+					 background: url(img/item.png) center no-repeat; background-size: 100%;}
+.content .stars .item .text{font-size: 26px; line-height: 40px; padding-top: 50px;}
+.content aside{width: 22% ;  margin-right: 30px; padding-left: 10px; display: inline-table;}
+.content .right{overflow: hidden;}
+
+
+
+article li {padding: 3px; background-color: #fff; margin:5px 0; border-radius: 5px; border:1px solid silver;}
+article li:last-child{margin-bottom: 25px}
+article .title {font-size:16px; color: #000066}
+article a {color:inherit;} 
+a.option {margin: 0px 3px;}
+a.option.edit {color:green; font-size: 20px; }
+a.option.del {color:red; font-size: 20px}
+a.option.back {color:blue; font-size: 20px}
+a.option.edit:hover {color: #006633}
+a.option.del:hover {color: #330000}
+a.option.back:hover {color: #000033}
+article a.add {background-color: #3399ff; font-size: 20px; padding: 7px; box-shadow: 1px 1px 4px 1px silver; border-radius: 5px; margin-left: 2px}
+article a.add:hover {background-color: #000066; transition: 0.6s ease-in-out }
+
+
+#form {margin: 10px 0 10px 0}
+#form input {margin: 5px 0 5px 0; }
+#form label {font-size: 17px;}
+#submit {padding: 5px}
+#submit:hover {background-color: #6699ff}
+#error {font-size: 16px; color: red;}
+
+.left {background-color: #e8eef2; border-radius: 5px; padding: 10px; height: auto}
+.left li {font-size: 10px; margin: 5px 0}
+.anons span {font-size: 12px; color: #006633}
+.left p {padding: 2px 0; margin:0; color: #757575}
+.left a{color:#000066}
+.left a:hover{color:#6666ff}
+
+footer{color: #fff;}
+footer .copy{line-height: 50px; padding-left: 10px; padding-right: 5%}
+footer .phone{line-height: 50px; position: absolute; bottom: 0px; right:10px; font-size: 17px}
+
+@media screen and (max-width: 1024px){
+	header nav ul{text-align: center;}
+	.content .stars{max-width: 440px;}
+	.content aside{float: none; width: auto; max-width: 500px; min-width: 340px; margin: 0 auto;}
+	.content aside .col{margin: 5px;}
+	.content aside .col.fl-l{float: left;}
+	.content aside .col.fl-r{float: right;}
+	footer{text-align: center;}
+}
+
+@media screen and (max-width: 580px){
+	.header{height: auto; min-height:160px;}
+	header .logo{margin: 10px auto;}
+	header .slogan{position: static; text-align: center;}
+	header .phone{position: static; text-align: center; padding: 10px 0;}
+	header .menu{height: auto;}
+	header nav ul{display: none;}
+	header nav ul li{display: block;}
+	header nav .show_menu{display: block; line-height: 50px; font-size: 14px;text-align: center; cursor: pointer;}
+        .footer{height: auto; padding: 5px 0;}
+}
+
+@media screen and (max-width: 490px){
+	.content .stars{max-width: 220px;}
+	.footer{height: auto; padding: 5px 0;}
+	footer span.copy{line-height: 30px;}
+        footer .phone{line-height: 30px;}
+}
+
+@media screen and (max-width: 390px){
+	.content aside .col.fl-l, .content aside .col.fl-r{float: none;}
+}
+
