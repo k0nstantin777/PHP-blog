@@ -25,7 +25,7 @@
         $password = '';
         $msg = '';
     }
-     
+      
     $inner = template('view_reg', [
         'back' => $_SERVER['HTTP_REFERER'],
         'msg'  => $msg,
