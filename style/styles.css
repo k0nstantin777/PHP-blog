@@ -58,12 +58,12 @@ header .user_menu a:hover {font-size: 12px; color: #6699ff;}
 header .user_menu span {font-size: 12px;}
 
 
-header nav a{color: inherit; }
+header nav a{color: inherit; padding: 17px 20px }
 header nav a:hover {color:#fff}
 header nav li:hover {background-color: #3366ff}
-header nav li{display: inline-block; height: 50px; line-height: 50px; font-size: 14px; padding: 0 20px; background-color: #044B66; transition: 0.6s;}
+header nav li{display: inline-block; line-height: 50px; font-size: 14px;  background-color: #044B66; transition: 0.6s;}
 header nav .show_menu {display: none;}
-header nav ul ul {opacity: 0; position: absolute; z-index: 10; text-align:left; visibility: hidden; margin: 0 0 0 -20px;}
+header nav ul ul {opacity: 0; position: absolute; z-index: 10; text-align:left; visibility: hidden;}
 header nav li:hover ul {opacity: 1; transition: 0.6s ease-in-out; visibility: visible}
 header nav ul ul li {width:auto; float:none; display:list-item; position: relative; color: #fff;}
 

@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width">
 	<link href="<?=BASE_PATH?>style/styles.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link href="<?=BASE_PATH?>favicon.ico" rel="shortcut icon" type="image/x-icon">
 	<title><?=$title?></title>
 </head>
 <body>
@@ -35,15 +36,18 @@
 					<nav>
 						<div class="show_menu">Меню</div>
 						<ul>
-                                                    <a href="<?=BASE_PATH?>"><li><i class="fa fa-home fa-fw"></i> Главная</li></a>
-                                                    <a href="<?=BASE_PATH?>posts"><li><i class="fa fa-file-text fa-fw"></i> Список статей <i class="fa fa-angle-down fa-fw"></i>
-                                                        <ul>
-                                                            <?php foreach($articles as $article): ?>
-                                                            <a href="<?=BASE_PATH?>post/<?= $article['id_article']?>"><li><?= $article['title'] ?></li></a>
-                                                            <?php endforeach; ?>
-                                                        </ul>
-                                                    </li></a>
-                                                    <a href="<?=BASE_PATH?>contacts"><li><i class="fa fa-phone fa-fw"></i>Контакты</li></a>
+                                                    <li><a href="<?=BASE_PATH?>"><i class="fa fa-home fa-fw"></i> Главная</a></li>
+                                                    <li><a href="<?=BASE_PATH?>posts"><i class="fa fa-file-text fa-fw"></i> Список статей <i class="fa fa-angle-down fa-fw"></i></a>    
+                                                        
+                                                            <ul>
+                                                                <?php foreach($articles as $article): ?>
+                                                                <li><a href="<?=BASE_PATH?>post/<?= $article['id_article']?>"><?= $article['title'] ?></a></li>
+                                                                <?php endforeach; ?>
+                                                            </ul>
+                                                        
+                                                        
+                                                    </li>
+                                                    <li><a href="<?=BASE_PATH?>contacts"><i class="fa fa-phone fa-fw"></i>Контакты</a></li>
 						</ul>					
 					</nav>
                                 </div>

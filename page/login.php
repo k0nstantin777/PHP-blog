@@ -2,6 +2,7 @@
    /* Страница авторизации */
     
     $msg = '';
+    //проверка на POST или GET
     if(count($_POST) > 0) {
         $user = get_user($_POST['login']);
         if ($user === false){
@@ -21,7 +22,7 @@
             else{
                 $msg = 'Неправильный пароль!';
             }
-        }    
+        }     
     }
     else{
         unset($_SESSION['auth']);

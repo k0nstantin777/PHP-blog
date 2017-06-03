@@ -11,6 +11,8 @@
             $msg = 'Заполните все поля';
         } elseif (!check_name($login, 'user')){ 
             $msg = 'Запрещенные символы в поле "Логин"'; 
+        } elseif (count(get_user($login))> 0){
+            $msg = 'Логин занят!'; 
         } else {
             registration ($login, myCrypt($password));     
             header("Location: ".BASE_PATH. "login?success=reg");
@@ -22,9 +24,8 @@
         $login = '';
         $password = '';
         $msg = '';
- 
     }
-    
+     
     $inner = template('view_reg', [
         'back' => $_SERVER['HTTP_REFERER'],
         'msg'  => $msg,
