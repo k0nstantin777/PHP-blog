@@ -2,12 +2,12 @@
     /*
      * Главная страница блога
      */
-    
-    $aside = template('view_anons', [
-         'articles' => get_all_articles()
+     
+    $aside = $mArticles->template('view_anons', [
+         'articles' => $articles
      ]);
     
-    $inner = template('view_index', [
+    $inner = $mArticles->template('view_index', [
 
     ]);
     

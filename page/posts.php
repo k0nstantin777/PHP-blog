@@ -3,7 +3,7 @@
      * Страница выбора статьи
      */
     
-    $articles = get_all_articles();
+    $articles = $mArticles->getAll();
  
     /* вывод сообщения после выполнения действия */
     $msg = '';
@@ -16,11 +16,11 @@
     } 
     
     
-    $aside = template('view_anons', [
+    $aside = $mArticles->template('view_anons', [
          'articles' => $articles
      ]);
     
-    $inner = template('view_posts', [
+    $inner = $mArticles->template('view_posts', [
         'articles' => $articles,
         'login' => $login,
         'user' => $user,

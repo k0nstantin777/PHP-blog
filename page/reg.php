@@ -9,12 +9,12 @@
         $password = trim(htmlspecialchars($_POST['password']));
         if($login == '' || $password == ''){
             $msg = 'Заполните все поля';
-        } elseif (!check_name($login, 'user')){ 
+        } elseif (!$mUsers->checkName($login, 'user')){ 
             $msg = 'Запрещенные символы в поле "Логин"'; 
-        } elseif (count(get_user($login))> 0){
+        } elseif ($mUsers->getOne($login)!==false){
             $msg = 'Логин занят!'; 
         } else {
-            registration ($login, myCrypt($password));     
+            $mUsers->registration (['login'=> $login, 'password' =>$mUsers->myCrypt($password)]);     
             header("Location: ".BASE_PATH. "login?success=reg");
             exit();
         } 
@@ -26,7 +26,7 @@
         $msg = '';
     }
       
-    $inner = template('view_reg', [
+    $inner = $mArticles->template('view_reg', [
         'back' => $_SERVER['HTTP_REFERER'],
         'msg'  => $msg,
         'login' => $login

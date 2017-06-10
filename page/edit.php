@@ -4,7 +4,7 @@
  */
     
     /*аутентификация*/
-    if(!isAuth()){
+    if(!$mUsers->isAuth()){
         header("Location:".BASE_PATH. "login");
         exit();
     } else {
@@ -21,10 +21,10 @@
         if(isset ($name) && isset ($text)){
             if(empty($name) || empty ($text)){
                 $msg = 'Заполните все поля';
-            } elseif (!check_name($name, 'article')){ 
+            } elseif (!$mArticles->checkName($name, 'article')){ 
                 $msg = 'Запрещенные символы в поле "Имя"'; 
             } else {
-                edit_article($params[1], $name, $text);  
+                $mArticles->editArticle(['id'=>$params[1],'title'=>$name, 'content'=> $text]);  
                 header("Location:".BASE_PATH. "posts?success=edit");
                 exit();
             }
@@ -33,7 +33,7 @@
     } else {
     /* зашли на страницу методом GET */
         $msg = '';
-        $article = get_article($params[1]);
+        $article = $mArticles->getOne($params[1]);
         if ($article === false) {
             $flag = false;
         } else {
@@ -43,7 +43,7 @@
     }
 
     if ($flag === true){
-        $inner = template('view_edit', [
+        $inner = $mArticles->template('view_edit', [
             'name' => $name,
             'text' => $text,
             'back' => $_SERVER['HTTP_REFERER'],
@@ -52,5 +52,5 @@
         $title = 'Изменить статью';        
     } else {
         $title = 'Ошибка 404';
-        $inner = template('404');
+        $inner = $mArticles->template('404');
     }     
