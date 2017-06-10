@@ -3,33 +3,33 @@
     
     $msg = '';
     //проверка на POST или GET
-    if(count($_POST) > 0) {
-        $user = get_user($_POST['login']);
-        if ($user === false){
+    if (count($_POST) > 0) {
+              
+        $userLogin = $mUsers->getOne($_POST['login']);
+        if($_POST['login'] == '' || $_POST['password'] == ''){
+            $msg = 'Заполните все поля'; 
+        } elseif ($_POST['login'] != '' && $userLogin === false){
             $msg = 'Пользователя с таким логином не существует';
         } else {
-            if($_POST['login'] == $user['login'] && myCrypt($_POST['password']) == $user['password']){
+            if($_POST['login'] == $userLogin['login'] && $mUsers->myCrypt($_POST['password']) == $userLogin['password']){
                 $_SESSION['auth'] = true;
-                $_SESSION['login'] = $user['login'];
+                $_SESSION['login'] = $userLogin['login'];
 
                 if(isset($_POST['remember'])){
-                    setcookie('login', $user['login'], time() + 3600 * 24 * 365);
-                    setcookie('password', $user['password'], time() + 3600 * 24 * 365);
+                    setcookie('login', $userLogin['login'], time() + 3600 * 24 * 365);
+                    setcookie('password', $userLogin['password'], time() + 3600 * 24 * 365);
                 }
                 header("Location:". BASE_PATH . 'posts');
                 exit();
-            }
-            else{
+            } else {
                 $msg = 'Неправильный пароль!';
             }
         }     
-    }
-    else{
+    } else {
         unset($_SESSION['auth']);
-        deleteCookie('login');
-        deleteCookie('password');
+        $mUsers->deleteCookie('login');
+        $mUsers->deleteCookie('password');
         $login = false;
-        $user = 'Гость';
         if (isset($_GET['success']) && !empty($_GET['success'])){
             $success = $_GET['success'];
             $msgs = ['reg' => 'Регистрация прошла успешно, теперь вы можете авторизоваться'];
@@ -38,11 +38,12 @@
         
         } 
     }
+    
+    
         
-    $inner = template('view_login', [
-        'msg'  => $msg,
-        'login' => $login,
-        'user' => $user
+    $inner = $mUsers->template('view_login', [
+        'msg'  => $msg
+      
     ]);
     
     $title = 'Авторизация';

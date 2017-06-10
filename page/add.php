@@ -4,7 +4,7 @@
 */
                  
     /*аутентификация*/
-    if(!isAuth()){
+    if(!$mUsers->isAuth()){
         header("Location: ".BASE_PATH. "login");
         exit();
     } else {
@@ -17,10 +17,10 @@
         $text = trim(htmlspecialchars($_POST['content']));
         if($name == '' || $text == ''){
             $msg = 'Заполните все поля';
-        } elseif (!check_name($name, 'article')){ 
+        } elseif (!$mArticles->checkName($name, 'article')){ 
             $msg = 'Запрещенные символы в поле "Имя"'; 
         } else {
-            add_article($name, $text);     
+            $mArticles->addArticle(['title'=>$name, 'content'=> $text]);     
             header("Location:".BASE_PATH. "posts?success=add");
             exit();
         } 
@@ -32,7 +32,7 @@
                 
     }
        
-    $inner = template('view_add', [
+    $inner = $mArticles->template('view_add', [
         'name' => $name,
         'text' => $text,
         'back' => $_SERVER['HTTP_REFERER'],
