@@ -16,6 +16,7 @@
                   
     /* ЧПУ */
     $params = explode('/', isset($_GET['q']) ? $_GET['q']: '');
+
     $params_cnt = count($params);
     
     if($params[$params_cnt - 1] == ''){
