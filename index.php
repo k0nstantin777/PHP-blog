@@ -7,55 +7,62 @@
         
     include_once 'config.php';
     include_once 'DB.php';
+    include_once 'Core.php';
     
     function __autoload($classname)
     {
 	include_once __DIR__.'/model/'.$classname . '.php';
     }
-    
-    $mArticles = new PostModel(DB::get());
-    $mUsers = new UserModel(DB::get());
-        
-    /*проверка логин*/
-           
-    if(!$mUsers->isAuth()){
-        $login = false;
-        $user = 'Гость';
-    } else {
-        $login = true;
-        $user = $_SESSION['login'];
-    }
-    
+                  
     /* ЧПУ */
-    $params = explode('/', $_GET['q']);
+    $params = explode('/', isset($_GET['q']) ? $_GET['q']: '');
     $params_cnt = count($params);
     
     if($params[$params_cnt - 1] == ''){
         unset($params[$params_cnt - 1]);
     }
+           
+    $action = sprintf('%sAction', isset($params[0]) ? $params[0] : 'index');
     
-    $cname = isset($params[0]) ? $params[0] : 'index';
-    $inc = "page/$cname.php";
-    $articles = $mArticles->getAll();
-    
-    if(file_exists($inc) && $mArticles->checkName($cname, 'get')){
-        include_once($inc);
-    } else{
-        $title = 'Ошибка 404';
-        $inner = template('404');
+    $controller = isset($params[0]) ? $params[0] : 'post';
+    switch ($controller) {
+	case 'post':
+        case 'posts':
+        case 'edit':
+        case 'add':
+        case 'delete':   
+		$controller = 'Post';
+		break;
+        case 'login':
+        case 'reg':
+		$controller = 'User';
+		break;
+            
+        case 'contacts':
+                $controller = 'Page';
+                break;
+	default:
+		$controller = 'Base';
+                $action = 'errorAction';
+		break;
     }
     
-    /* подключение основного шаблона сайта */
-    $html = $mArticles->template('view_main', [
-        'title' => $title,
-        'aside' => isset($aside) ? $aside:null,
-        'content' => $inner,
-        'user' => $user,
-        'login' => $login,    
-        'articles' => $articles
-    ]);
-
-    echo $html;
+    $controller .= 'Controller';
+    $fileName = sprintf('controller/%s.php', $controller);
+        
+    if (!file_exists($fileName)) {
+	echo '404 Error!';
+	header("HTTP/1.1 404 Not Found");
+	die;
+    }   
     
+    include_once $fileName;
+
+    $controller = new $controller();
+
+    $controller->$action(); 
+
+    $controller->response();
+        
    
    

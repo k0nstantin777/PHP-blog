@@ -15,7 +15,7 @@ class UserModel extends BaseModel {
     }
     
     /* регистрация */
-    public function registration (array $params){
+    public function add (array $params){
         $stmt = $this->pdo->prepare("INSERT INTO {$this->table} (login, password) VALUES (:login, :password)");
         return $stmt->execute($params);
     }
