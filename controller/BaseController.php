@@ -18,10 +18,7 @@ class BaseController {
     {
         $this->title = '';
         $this->content = '';
-        $mArticles = new PostModel(DB::get());
-        $this->articles = $mArticles->getAll();
-        $this->aside = $this->template('view_anons', ['articles' => $this->articles] );
-        
+                
         if(!Core::isAuth()){
             $this->login = false;
         } else {

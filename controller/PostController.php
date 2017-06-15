@@ -9,10 +9,21 @@ include_once __DIR__ . '/BaseController.php';
     
 class PostController extends BaseController
 {    
+    
+    private $mArticles;
+    
+    public function __construct()
+    {
+        parent::__construct();
+        $this->mArticles = new PostModel(DB::get());
+        $this->articles = $this->mArticles->getAll();
+    }        
+
+
     public function indexAction()
     {
-        
         $this->title = 'Мой блог';
+        $this->aside = $this->template('view_anons', ['articles' => $this->articles] );
         $this->content = $this->template('view_index');
     }
 
@@ -20,9 +31,8 @@ class PostController extends BaseController
     {
         
         $flag = true;
-        $mArticles = new PostModel(DB::get());
         $id = explode ('/', $_GET['q'])[1];
-        $article = $mArticles->getOne($id);
+        $article = $this->mArticles->getOne($id);
         
         if ($article === false){
             $flag = false;
@@ -49,6 +59,7 @@ class PostController extends BaseController
        
         /* вывод сообщения после выполнения действия */
         $msg = '';
+        
         if (isset($_GET['success']) && !empty($_GET['success']) && $this->login === true){
             $success = $_GET['success'];
             $msgs = ['edit' => 'Изменения сохранены', 'add' => 'Статья добавлена', 'delete'=> 'Статья удалена'];
@@ -63,7 +74,7 @@ class PostController extends BaseController
             'user' => $this->user,
             'msg'  => $msg,
         ]);
-
+        $this->aside = $this->template('view_anons', ['articles' => $this->articles] );
         $this->title = 'Статьи';
     }
     
@@ -86,6 +97,11 @@ class PostController extends BaseController
             } 
         } else {
             /* зашли на страницу методом GET */
+            if(!$this->login){
+                header("Location: ".BASE_PATH. "login");
+                exit();
+            }
+            
             $name = '';
             $text = '';
             $msg = '';
@@ -128,6 +144,11 @@ class PostController extends BaseController
 
         } else {
         /* зашли на страницу методом GET */
+            if(!$this->login){
+                header("Location: ".BASE_PATH. "login");
+                exit();
+            }
+            
             $msg = '';
             $id = explode ('/', $_GET['q'])[1];
             $article = $mArticles->getOne($id);
