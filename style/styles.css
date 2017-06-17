@@ -94,6 +94,7 @@ article a.add:hover {background-color: #000066; transition: 0.6s ease-in-out }
 
 #form {margin: 10px 0 10px 0}
 #form input {margin: 5px 0 5px 0; }
+#form #title {width: 250px}
 #form label {font-size: 17px;}
 #submit {padding: 5px}
 #submit:hover {background-color: #6699ff}

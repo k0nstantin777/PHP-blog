@@ -5,9 +5,13 @@
  *
  * @author bumer
  */
+namespace model;
+use model\BaseModel;
+
+
 class PostModel extends BaseModel
 {
-    public function __construct(PDO $pdo)
+    public function __construct(\PDO $pdo)
     {
         parent::__construct($pdo);
         $this->table = 'articles';

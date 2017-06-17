@@ -5,20 +5,26 @@
  *
  * @author bumer
  */
+
+namespace controller;
+use core\Core;
+
 class BaseController {
     protected $title;
     protected $content;
     protected $aside;
     protected $user = 'Гость';
     protected $login;
-    protected $articles;
-
-
+    protected $menu;
+    
     public function __construct()
     {
         $this->title = '';
         $this->content = '';
-                
+        $this->menu = $this->template('view_menu', [
+            'login'  => $this->login
+        ]);
+        
         if(!Core::isAuth()){
             $this->login = false;
         } else {
@@ -37,7 +43,7 @@ class BaseController {
             'user' => $this->user,
             'login' => $this->login,
             'aside' => $this->aside,
-            'articles' =>$this->articles
+            'menu' =>$this->menu
         ]);
     }
     
@@ -49,9 +55,11 @@ class BaseController {
         return ob_get_clean();
     }
     
-    public function errorAction()
+    /* ошибка 404 */
+    public function er404Action()
     {
         $this->title = 'Ошибка 404';
         $this->content = $this->template('404');
+        header("HTTP/1.1 404 Not Found");
     }        
 }

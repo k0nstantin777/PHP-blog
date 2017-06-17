@@ -5,6 +5,9 @@
  *
  * @author bumer
  */
+namespace core;
+use model\UserModel, core\DB;    
+
 class Core {
     /* аутентификация */
      public static function isAuth()

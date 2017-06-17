@@ -1,5 +1,13 @@
 <?php
 
+    session_start();
+    
+    function __autoload($classname)
+    {
+	include_once  __DIR__ .DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $classname) . '.php';
+    }
+    
+    /* константы */
     define('BASE_PATH', '/');
     
     define('DB_DRIVER', 'mysql');

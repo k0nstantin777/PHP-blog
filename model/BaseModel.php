@@ -5,29 +5,27 @@
  *
  * @author bumer
  */
+namespace model;
+
 abstract class BaseModel 
 {
     protected $pdo;
     protected $table;
     protected $id;
 
-    public function __construct(PDO $pdo)
+    public function __construct(\PDO $pdo)
     {
         $this->pdo = $pdo;
     }
     
-    /* вывод всех записей из БД */
+    /* вывод всех записей из таблицы $this->table  */
     public function getAll () 
     {
-
         $stmt = $this->pdo->query("SELECT * FROM {$this->table} ORDER BY dt DESC"); 
-
-        $stmt = $this->pdo->query("SELECT * FROM {$this->table} ORDER BY dt DESC"); // $stmt = $this->pdo->query("SELECT * FROM {$this->table}");
-
         return $stmt->fetchAll();
     }
     
-    /* вывод одной записи из БД */
+    /* вывод записи с $id  из таблицы $this->table*/
     public function getOne ($id) 
     {
         $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE {$this->id} = :id");
@@ -35,7 +33,16 @@ abstract class BaseModel
         return $stmt->fetch();
     }
     
-    /* удаление одной записи из БД */
+     /* выбор случайных записей из таблицы {$this->table} в количестве $count */
+    public function getRandLimit ($count)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} ORDER BY RAND() LIMIT :count "); 
+        $stmt->bindParam(':count', $count, \PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }        
+    
+    /* удаление одной записи c $id из таблицы $this->table */
     public function delete($id) 
     {
         $stmt = $this->pdo->prepare("DELETE FROM {$this->table} WHERE {$this->id} = :id");

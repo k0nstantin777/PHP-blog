@@ -2,29 +2,21 @@
 /*
  * точка входа
  */    
-    
-    session_start();
-        
     include_once 'config.php';
-    include_once 'DB.php';
-    include_once 'Core.php';
-    
-    function __autoload($classname)
-    {
-	include_once __DIR__.'/model/'.$classname . '.php';
-    }
-                  
+                     
     /* ЧПУ */
     $params = explode('/', isset($_GET['q']) ? $_GET['q']: '');
-
+    $id = isset($params[1]) ? $params[1] : NULL;
     $params_cnt = count($params);
     
     if($params[$params_cnt - 1] == ''){
         unset($params[$params_cnt - 1]);
     }
-           
+    
+    /* определяем метод, по умолчанию indexAction */
     $action = sprintf('%sAction', isset($params[0]) ? $params[0] : 'index');
     
+    /* определяем контроллер, по умолчанию PostController */
     $controller = isset($params[0]) ? $params[0] : 'post';
     switch ($controller) {
 	case 'post':
@@ -44,24 +36,15 @@
                 break;
 	default:
 		$controller = 'Base';
-                $action = 'errorAction';
+                $action = 'er404Action';
 		break;
     }
     
-    $controller .= 'Controller';
-    $fileName = sprintf('controller/%s.php', $controller);
+    $controller = sprintf('controller\%sController', $controller);
         
-    if (!file_exists($fileName)) {
-	echo '404 Error!';
-	header("HTTP/1.1 404 Not Found");
-	die;
-    }   
-    
-    include_once $fileName;
-
     $controller = new $controller();
 
-    $controller->$action(); 
+    $controller->$action($id); 
 
     $controller->response();
         

@@ -5,40 +5,42 @@
  *
  * @author bumer
  */
-include_once __DIR__ . '/BaseController.php';
-    
+
+namespace controller;
+use controller\BaseController,
+    model\PostModel,
+    core\Core,
+    core\DB;
+
 class PostController extends BaseController
 {    
-    
     private $mArticles;
+    private $articles;
     
     public function __construct()
     {
         parent::__construct();
         $this->mArticles = new PostModel(DB::get());
         $this->articles = $this->mArticles->getAll();
+        $this->menu = $this->template('view_menu', [
+                'articles' => $this->articles,
+                'login' => $this->login,    
+        ]);
+        
     }        
 
-
+    /* главная страница */
     public function indexAction()
     {
         $this->title = 'Мой блог';
-        $this->aside = $this->template('view_anons', ['articles' => $this->articles] );
+        $this->aside = $this->template('view_anons', ['articles' => $this->mArticles->getRandLimit(7)] );
         $this->content = $this->template('view_index');
     }
 
-    public function postAction()
+    /* страница вывода одной статьи /post */
+    public function postAction($id) 
     {
-        
-        $flag = true;
-        $id = explode ('/', $_GET['q'])[1];
-        $article = $this->mArticles->getOne($id);
-        
-        if ($article === false){
-            $flag = false;
-        } 
-
-        if ($flag === true){
+        if ($article = $this->mArticles->getOne($id)){
             $this->content = $this->template('view_post', [
                 'login' => $this->login,
                 'article' => $article,
@@ -47,19 +49,15 @@ class PostController extends BaseController
             $this->title = $article['title'];
             $this->aside = '';    
         } else {
-            $this->title = 'Ошибка 404';
-            $this->content = $this->template('404');
+            $this->er404Action();
         }
-        
-        
     }
 
+    /* страница вывода всех статей /posts */
     public function postsAction() 
     {
-       
         /* вывод сообщения после выполнения действия */
         $msg = '';
-        
         if (isset($_GET['success']) && !empty($_GET['success']) && $this->login === true){
             $success = $_GET['success'];
             $msgs = ['edit' => 'Изменения сохранены', 'add' => 'Статья добавлена', 'delete'=> 'Статья удалена'];
@@ -67,23 +65,20 @@ class PostController extends BaseController
             $msg = ($msgs[$success]) ? $msgs[$success] : '';
 
         } 
-
         $this->content = $this->template('view_posts', [
             'articles' => $this->articles,
             'login' => $this->login,
             'user' => $this->user,
             'msg'  => $msg,
         ]);
-        $this->aside = $this->template('view_anons', ['articles' => $this->articles] );
+        $this->aside = $this->template('view_anons', ['articles' => $this->mArticles->getRandLimit(7)] );
         $this->title = 'Статьи';
     }
     
-    
+    /* страница добавление статьи /add */
     public function addAction()
     {
         if(count($_POST) > 0){
-            $mArticles = new PostModel(DB::get());
-
             $name = trim(htmlspecialchars($_POST['title']));
             $text = trim(htmlspecialchars($_POST['content']));
             if($name == '' || $text == ''){
@@ -91,7 +86,7 @@ class PostController extends BaseController
             } elseif (!Core::checkName($name, 'article')){ 
                 $msg = 'Запрещенные символы в поле "Имя"'; 
             } else {
-                $mArticles->add(['title'=>$name, 'content'=> $text]);     
+                $this->mArticles->add(['title'=>$name, 'content'=> $text]);     
                 header("Location:".BASE_PATH. "posts?success=add");
                 exit();
             } 
@@ -101,7 +96,6 @@ class PostController extends BaseController
                 header("Location: ".BASE_PATH. "login");
                 exit();
             }
-            
             $name = '';
             $text = '';
             $msg = '';
@@ -115,18 +109,13 @@ class PostController extends BaseController
         ]);
 
         $this->title = 'Добавить статью';
-        $this->aside = '';    
-           
     }
     
-    public function editAction()
+    /* страница редактрирование статьи /edit/id */
+    public function editAction($id)
     {
-        $flag = true;
-        $mArticles = new PostModel(DB::get());
-        
         /* проверка отправки формы методом POST */
         if (count($_POST)>0){
-            
             $msg = '';
             $name = trim(htmlspecialchars($_POST['title']));
             $text = trim(htmlspecialchars($_POST['content']));
@@ -136,7 +125,7 @@ class PostController extends BaseController
                 } elseif (!Core::checkName($name, 'article')){ 
                     $msg = 'Запрещенные символы в поле "Имя"'; 
                 } else {
-                    $mArticles->edit(['id'=>$params[1],'title'=>$name, 'content'=> $text]);  
+                    $this->mArticles->edit(['id'=>$params[1],'title'=>$name, 'content'=> $text]);  
                     header("Location:".BASE_PATH. "posts?success=edit");
                     exit();
                 }
@@ -150,47 +139,37 @@ class PostController extends BaseController
             }
             
             $msg = '';
-            $id = explode ('/', $_GET['q'])[1];
-            $article = $mArticles->getOne($id);
-            if ($article === false) {
-                $flag = false;
-            } else {
-                $name = $article['title'];
-                $text = $article['text'];
-            }
+            $article = $this->mArticles->getOne($id);
         }
 
-        if ($flag === true){
+        if ($article = $this->mArticles->getOne($id)){
+            $name = $article['title'];
+            $text = $article['text'];
             $this->content = $this->template('view_edit', [
                 'name' => $name,
                 'text' => $text,
                 'back' => $_SERVER['HTTP_REFERER'],
                 'msg'  => $msg,
             ]);
-            $this->aside = '';
             $this->title = 'Изменить статью';        
         } else {
-            $this->title = 'Ошибка 404';
-            $this->content = $this->template('404');
+            $this->er404Action();
         }     
     }
     
+    /* удаление статьи /delete/id */
     public function deleteAction()
     {
         if(!$this->login){
         header("Location: ".BASE_PATH. "login");
         exit();
         }
-        $mArticles = new PostModel(DB::get());
-        $id = explode ('/', $_GET['q'])[1];
         //удалеяем статью
-        if ($mArticles->delete($id)){
+        if ($this->mArticles->delete($id)){
             header("Location: ".BASE_PATH. "posts?success=delete");
             exit();
         } else {
-            $this->title = 'Ошибка 404';
-            $this->content = $this->template('404');
-            $this->aside = '';
+            $this->er404Action();
         }
     }         
 }

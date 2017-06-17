@@ -6,19 +6,30 @@
  * @author bumer
  */
 
-include_once __DIR__ . '/BaseController.php';
+namespace controller;
+use controller\BaseController,
+    model\UserModel,
+    core\Core,
+    core\DB ;
+
 
 class UserController extends BaseController {
          
+    public function __construct()
+    {
+        parent::__construct();
+        $this->mUsers = new UserModel(DB::get());
+    }   
+    
+    
+    /* авторизация */
     public function loginAction()
     {
         /* Страница авторизации */
-       
         $msg = '';
         //проверка на POST или GET
         if (count($_POST) > 0) {
-            $mUsers = new UserModel(DB::get());      
-            $userLogin = $mUsers->getOne($_POST['login']);
+            $userLogin = $this->mUsers->getOne($_POST['login']);
             if($_POST['login'] == '' || $_POST['password'] == ''){
                 $msg = 'Заполните все поля'; 
             } elseif ($_POST['login'] != '' && $userLogin === false){
@@ -58,30 +69,28 @@ class UserController extends BaseController {
         ]);
 
         $this->title = 'Авторизация';
-        $this->aside = '';
     }
     
+    /* регистрация нового пользователя */
     public function regAction()
     {
         $msg = '';
         if(count($_POST) > 0){
-            $mUsers = new UserModel(DB::get()); 
             $login = trim(htmlspecialchars($_POST['login']));
             $password = trim(htmlspecialchars($_POST['password']));
             if($login == '' || $password == ''){
                 $msg = 'Заполните все поля';
             } elseif (!Core::checkName($login, 'user')){ 
                 $msg = 'Запрещенные символы в поле "Логин"'; 
-            } elseif ($mUsers->getOne($login)!==false){
+            } elseif ($this->mUsers->getOne($login)!==false){
                 $msg = 'Логин занят!'; 
             } else {
-                $mUsers->add (['login'=> $login, 'password' => Core::myCrypt($password)]);     
+                $this->mUsers->add (['login'=> $login, 'password' => Core::myCrypt($password)]);     
                 header("Location: ".BASE_PATH. "login?success=reg");
                 exit();
             } 
         } else {
             /* зашли на страницу методом GET */
-
             $login = '';
             $password = '';
             $msg = '';
@@ -93,7 +102,6 @@ class UserController extends BaseController {
             'login' => $login
         ]);
         $this-> title = 'Регистрация'; 
-        $this->aside = '';
     }
     
     

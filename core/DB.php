@@ -5,6 +5,9 @@
  *
  * @author bumer
  */
+namespace core;
+use \PDO;
+
 class DB {
     private static $instance;
 

@@ -5,9 +5,12 @@
  *
  * @author bumer
  */
+namespace model;
+use model\BaseModel;
+
 class UserModel extends BaseModel {
    
-    public function __construct(PDO $pdo)
+    public function __construct(\PDO $pdo)
     {
         parent::__construct($pdo);
         $this->table = 'users';
