@@ -10,15 +10,17 @@ namespace controller;
 use controller\BaseController,
     model\UserModel,
     core\Core,
-    core\DB ;
+    core\DB,
+    core\DBDriver,
+    core\Request;
 
 
 class UserController extends BaseController {
          
-    public function __construct()
+    public function __construct(Request $request)
     {
-        parent::__construct();
-        $this->mUsers = new UserModel(DB::get());
+        parent::__construct($request);
+        $this->mUsers = new UserModel(new DBDriver(DB::get()));
     }   
     
     
@@ -28,18 +30,20 @@ class UserController extends BaseController {
         /* Страница авторизации */
         $msg = '';
         //проверка на POST или GET
-        if (count($_POST) > 0) {
-            $userLogin = $this->mUsers->getOne($_POST['login']);
-            if($_POST['login'] == '' || $_POST['password'] == ''){
+        if ($this->request->isPost()) {
+            $login = $this->request->getParam($this->request->post['login']);
+            $password = $this->request->getParam($this->request->post['password']);
+            $userLogin = $this->mUsers->getOne($login);
+            if($login == '' || $password == ''){
                 $msg = 'Заполните все поля'; 
-            } elseif ($_POST['login'] != '' && $userLogin === false){
+            } elseif ($login != '' && $userLogin === false){
                 $msg = 'Пользователя с таким логином не существует';
             } else {
-                if($_POST['login'] == $userLogin['login'] && Core::myCrypt($_POST['password']) == $userLogin['password']){
+                if($login == $userLogin['login'] && Core::myCrypt($password) == $userLogin['password']){
                     $_SESSION['auth'] = true;
                     $_SESSION['login'] = $userLogin['login'];
 
-                    if(isset($_POST['remember'])){
+                    if($this->request->getParam($this->request->post['remember'])){
                         setcookie('login', $userLogin['login'], time() + 3600 * 24 * 365);
                         setcookie('password', $userLogin['password'], time() + 3600 * 24 * 365);
                     }
@@ -50,18 +54,16 @@ class UserController extends BaseController {
                 }
             }     
         } else {
+            
             unset($_SESSION['auth']);
             Core::deleteCookie('login');
             Core::deleteCookie('password');
             $this->login = false;
             $this->user = 'Гость';
-            if (isset($_GET['success']) && !empty($_GET['success'])){
-                $success = $_GET['success'];
-                $msgs = ['reg' => 'Регистрация прошла успешно, теперь вы можете авторизоваться'];
-
-                $msg = ($msgs[$success]) ? $msgs[$success] : '';
-
-            } 
+            $success = isset($this->request->get['success']) ? $this->request->getParam($this->request->get['success']) : '';
+            $msgs = ['reg' => 'Регистрация прошла успешно, теперь вы можете авторизоваться'];
+            $msg = isset($msgs[$success]) ? $msgs[$success] : '';
+ 
         }
     
         $this->content = $this->template('view_login', [
@@ -75,9 +77,9 @@ class UserController extends BaseController {
     public function regAction()
     {
         $msg = '';
-        if(count($_POST) > 0){
-            $login = trim(htmlspecialchars($_POST['login']));
-            $password = trim(htmlspecialchars($_POST['password']));
+        if($this->request->isPost()){
+            $login = $this->request->getParam($this->request->post['login']);
+            $password = $this->request->getParam($this->request->post['password']);
             if($login == '' || $password == ''){
                 $msg = 'Заполните все поля';
             } elseif (!Core::checkName($login, 'user')){ 
@@ -97,7 +99,7 @@ class UserController extends BaseController {
         }
 
         $this->content = $this->template('view_reg', [
-            'back' => $_SERVER['HTTP_REFERER'],
+            'back' => $this->request->getParam($this->request->server['HTTP_REFERER']),
             'msg'  => $msg,
             'login' => $login
         ]);

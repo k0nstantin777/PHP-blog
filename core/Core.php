@@ -6,7 +6,9 @@
  * @author bumer
  */
 namespace core;
-use model\UserModel, core\DB;    
+use model\UserModel,
+    core\DB, 
+    core\DBDriver;    
 
 class Core {
     /* аутентификация */
@@ -15,7 +17,7 @@ class Core {
         if(!isset($_SESSION['auth'])){
             $login = self::getCookie('login');
             $pass = self::getCookie('password');
-            $userLogin = new UserModel(DB::get());
+            $userLogin = new UserModel(new DBDriver(DB::get()));
             if ($user = $userLogin->getOne($login)){
                 if($login == $user['login'] && $pass == $user['password']){
                     $_SESSION['auth'] = true;

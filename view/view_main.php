@@ -15,8 +15,8 @@
 				<div class="wrapper">
 					<div class="logo"></div>
 					<div class="slogan">
-						<div class="title">Блог Константина</div>
-						<div class="subtitle">Курсовая работа - PHP1</div>
+						<div class="title">Блог по основам PHP</div>
+						<div class="subtitle">Основы языка программирования PHP</div>
 					</div>
 					
                                         <div class="current_user"><span>User <span class="fa fa-user fa-fw"></span></span> : <i> <?=$user?></i></div>

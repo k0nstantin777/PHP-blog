@@ -7,34 +7,41 @@
  */
 
 namespace controller;
-use core\Core;
 
-class BaseController {
+use core\Core,
+    core\Request;
+
+class BaseController
+{
+
     protected $title;
     protected $content;
     protected $aside;
     protected $user = 'Гость';
     protected $login;
     protected $menu;
-    
-    public function __construct()
+    protected $request;
+
+    public function __construct(Request $request)
     {
         $this->title = '';
         $this->content = '';
         $this->menu = $this->template('view_menu', [
-            'login'  => $this->login
+            'login' => $this->login
         ]);
-        
-        if(!Core::isAuth()){
+
+        if (!Core::isAuth()) {
             $this->login = false;
         } else {
             $this->login = true;
             $this->user = $_SESSION['login'];
         }
         
+        $this->request = $request;
     }
 
     /* вывод шаблона страницы в браузере */
+
     public function response()
     {
         echo $html = $this->template('view_main', [
@@ -43,23 +50,27 @@ class BaseController {
             'user' => $this->user,
             'login' => $this->login,
             'aside' => $this->aside,
-            'menu' =>$this->menu
+            'menu' => $this->menu
         ]);
     }
-    
-    /* подключение шаблона страницы*/ 
-    protected function template($path, $vars = []){
-        extract($vars);
-        ob_start();
-        include("view/$path.php");
-        return ob_get_clean();
-    }
-    
+
     /* ошибка 404 */
+
     public function er404Action()
     {
         $this->title = 'Ошибка 404';
         $this->content = $this->template('404');
         header("HTTP/1.1 404 Not Found");
-    }        
+    }
+
+    /* подключение шаблона страницы */
+
+    protected function template($path, $vars = [])
+    {
+        extract($vars);
+        ob_start();
+        include("view/$path.php");
+        return ob_get_clean();
+    }
+
 }
