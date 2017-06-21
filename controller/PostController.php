@@ -10,21 +10,23 @@ namespace controller;
 use controller\BaseController,
     model\PostModel,
     core\Core,
-    core\DB;
+    core\DB,
+    core\DBDriver,
+    core\Request;
 
 class PostController extends BaseController
 {    
     private $mArticles;
     private $articles;
     
-    public function __construct()
+    public function __construct(Request $request)
     {
-        parent::__construct();
-        $this->mArticles = new PostModel(DB::get());
+        parent::__construct($request);
+        $this->mArticles = new PostModel(new DBDriver(DB::get()));
         $this->articles = $this->mArticles->getAll();
         $this->menu = $this->template('view_menu', [
-                'articles' => $this->articles,
-                'login' => $this->login,    
+            'articles' => $this->articles,
+            'login' => $this->login,    
         ]);
         
     }        
@@ -38,13 +40,14 @@ class PostController extends BaseController
     }
 
     /* страница вывода одной статьи /post */
-    public function postAction($id) 
+    public function postAction() 
     {
+        $id = $this->request->getId();
         if ($article = $this->mArticles->getOne($id)){
             $this->content = $this->template('view_post', [
                 'login' => $this->login,
                 'article' => $article,
-                'back' => $_SERVER['HTTP_REFERER'],
+                'back' => $this->request->getParam($this->request->server['HTTP_REFERER']),
             ]);
             $this->title = $article['title'];
             $this->aside = '';    
@@ -58,12 +61,11 @@ class PostController extends BaseController
     {
         /* вывод сообщения после выполнения действия */
         $msg = '';
-        if (isset($_GET['success']) && !empty($_GET['success']) && $this->login === true){
-            $success = $_GET['success'];
+        
+        if ($this->login === true){
+            $success = isset($this->request->get['success']) ? $this->request->getParam($this->request->get['success']) : '';
             $msgs = ['edit' => 'Изменения сохранены', 'add' => 'Статья добавлена', 'delete'=> 'Статья удалена'];
-
-            $msg = ($msgs[$success]) ? $msgs[$success] : '';
-
+            $msg = isset($msgs[$success]) ? $msgs[$success] : '';
         } 
         $this->content = $this->template('view_posts', [
             'articles' => $this->articles,
@@ -78,15 +80,15 @@ class PostController extends BaseController
     /* страница добавление статьи /add */
     public function addAction()
     {
-        if(count($_POST) > 0){
-            $name = trim(htmlspecialchars($_POST['title']));
-            $text = trim(htmlspecialchars($_POST['content']));
+        if($this->request->isPost()){
+            $name = $this->request->getParam($this->request->post['title']);
+            $text = $this->request->getParam($this->request->post['content']);
             if($name == '' || $text == ''){
                 $msg = 'Заполните все поля';
             } elseif (!Core::checkName($name, 'article')){ 
                 $msg = 'Запрещенные символы в поле "Имя"'; 
             } else {
-                $this->mArticles->add(['title'=>$name, 'content'=> $text]);     
+                $this->mArticles->add(['title'=>$name, 'text'=> $text]);     
                 header("Location:".BASE_PATH. "posts?success=add");
                 exit();
             } 
@@ -104,7 +106,7 @@ class PostController extends BaseController
         $this->content = $this->template('view_add', [
             'name' => $name,
             'text' => $text,
-            'back' => $_SERVER['HTTP_REFERER'],
+            'back' => $this->request->getParam($this->request->server['HTTP_REFERER']),
             'msg'  => $msg
         ]);
 
@@ -112,20 +114,21 @@ class PostController extends BaseController
     }
     
     /* страница редактрирование статьи /edit/id */
-    public function editAction($id)
+    public function editAction()
     {
+        $id = $this->request->getId();
         /* проверка отправки формы методом POST */
-        if (count($_POST)>0){
+        if ($this->request->isPost()){
             $msg = '';
-            $name = trim(htmlspecialchars($_POST['title']));
-            $text = trim(htmlspecialchars($_POST['content']));
+            $name = $this->request->getParam($this->request->post['title']);
+            $text = $this->request->getParam($this->request->post['content']);
             if(isset ($name) && isset ($text)){
                 if(empty($name) || empty ($text)){
                     $msg = 'Заполните все поля';
                 } elseif (!Core::checkName($name, 'article')){ 
                     $msg = 'Запрещенные символы в поле "Имя"'; 
                 } else {
-                    $this->mArticles->edit(['id'=>$params[1],'title'=>$name, 'content'=> $text]);  
+                    $this->mArticles->edit(['id_article'=> $id,'title'=> $name, 'text'=> $text]);  
                     header("Location:".BASE_PATH. "posts?success=edit");
                     exit();
                 }
@@ -137,7 +140,6 @@ class PostController extends BaseController
                 header("Location: ".BASE_PATH. "login");
                 exit();
             }
-            
             $msg = '';
             $article = $this->mArticles->getOne($id);
         }
@@ -148,7 +150,7 @@ class PostController extends BaseController
             $this->content = $this->template('view_edit', [
                 'name' => $name,
                 'text' => $text,
-                'back' => $_SERVER['HTTP_REFERER'],
+                'back' => $this->request->getParam($this->request->server['HTTP_REFERER']),
                 'msg'  => $msg,
             ]);
             $this->title = 'Изменить статью';        
@@ -160,6 +162,7 @@ class PostController extends BaseController
     /* удаление статьи /delete/id */
     public function deleteAction()
     {
+        $id = $this->request->getId();
         if(!$this->login){
         header("Location: ".BASE_PATH. "login");
         exit();

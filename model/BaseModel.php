@@ -7,46 +7,102 @@
  */
 namespace model;
 
+use core\DBDriverInterface;
+
 abstract class BaseModel 
 {
-    protected $pdo;
+    /**
+     * @var DBDriverInterface 
+     */
+    protected $db;
+    /**
+     * Имя таблицы БД
+     * @var string 
+     */
     protected $table;
-    protected $id;
+    /**
+     * Имя столбца уникального идентификатора в БД;
+     * @var string
+     */
+    protected $id_name;
 
-    public function __construct(\PDO $pdo)
+    public function __construct(DBDriverInterface $db)
     {
-        $this->pdo = $pdo;
+        $this->db = $db;
     }
     
-    /* вывод всех записей из таблицы $this->table  */
+    /**
+     * Вывод всех записей из таблицы $this->table
+     * 
+     * @return type
+     */
     public function getAll () 
     {
-        $stmt = $this->pdo->query("SELECT * FROM {$this->table} ORDER BY dt DESC"); 
-        return $stmt->fetchAll();
+        return $this->db->Query("SELECT * FROM {$this->table} ORDER BY dt DESC"); 
     }
     
-    /* вывод записи с $id  из таблицы $this->table*/
+    /**
+     * Выбор записи с $id  из таблицы $this->table
+     * 
+     * @param integer $id
+     * 
+     * @return array|false;
+     */
     public function getOne ($id) 
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE {$this->id} = :id");
-        $stmt->execute(['id'=> $id]);
-        return $stmt->fetch();
+        $one = $this->db->Query("SELECT * FROM {$this->table} WHERE {$this->id_name} = '$id' LIMIT 1");
+        return !empty($one) ? $one[0] : false;
     }
     
-     /* выбор случайных записей из таблицы {$this->table} в количестве $count */
+    /**
+     * Выбор случайных записей из таблицы {$this->table} в количестве $count
+     * 
+     * @param integer $count
+     * 
+     * @return true|false;
+     */
     public function getRandLimit ($count)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} ORDER BY RAND() LIMIT :count "); 
-        $stmt->bindParam(':count', $count, \PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll();
+        return $this->db->Query("SELECT * FROM {$this->table} ORDER BY RAND() LIMIT $count"); 
     }        
-    
-    /* удаление одной записи c $id из таблицы $this->table */
+     
+    /**
+     * Удаление одной записи c $id из таблицы $this->table
+     * 
+     * @param integer $id
+     * 
+     * @return true|false;
+     */
     public function delete($id) 
     {
-        $stmt = $this->pdo->prepare("DELETE FROM {$this->table} WHERE {$this->id} = :id");
-        return $stmt->execute(['id'=> $id]);
+        return $this->db->Delete("{$this->table}", "{$this->id_name} = '$id'");
+    }
+    
+    /**
+     * добавление статьи 
+     * 
+     * @param array $params
+     * 
+     * @return true|false; 
+     */
+    public function add(array $params)
+    {
+        return $this->db->Insert("{$this->table}", $params);
+    }
+    
+    /**
+     * Изменение статьи
+     * 
+     * @param array $params 
+     * 
+     * @return true|false;
+     */
+    public function edit(array $params)
+    {
+        $id = $params[$this->id_name];
+        unset ($params[$this->id_name]);
+        
+        return $this->db->Update("$this->table", $params, "{$this->id_name} = '$id'");
     }
 }
  

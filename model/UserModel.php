@@ -5,24 +5,19 @@
  *
  * @author bumer
  */
+
 namespace model;
-use model\BaseModel;
 
-class UserModel extends BaseModel {
-   
-    public function __construct(\PDO $pdo)
+use model\BaseModel,
+    core\DBDriverInterface;
+
+class UserModel extends BaseModel
+{
+
+    public function __construct(DBDriverInterface $db)
     {
-        parent::__construct($pdo);
+        parent::__construct($db);
         $this->table = 'users';
-        $this->id = 'login';
+        $this->id_name = 'login';
     }
-    
-    /* регистрация */
-
-    public function add (array $params)
-    {
-        $stmt = $this->pdo->prepare("INSERT INTO {$this->table} (login, password) VALUES (:login, :password)");
-        return $stmt->execute($params);
-    }
-  
 }
