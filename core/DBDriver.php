@@ -26,15 +26,19 @@ class DBDriver implements DBDriverInterface
      */
     public function Query($sql)
     {
-        $q = $this->pdo->prepare($sql);
-        $q->execute();
-
-        if ($q->errorCode() != \PDO::ERR_NONE) {
-            $info = $q->errorInfo();
-            die($info[2]);
+        try {
+            $q = $this->pdo->prepare($sql);
+            $q->execute();
+            $query = $q->fetchAll();
+        } catch (\PDOException $e){
+            die (nl2br(
+                        'Filed connect to DB'.PHP_EOL
+                       .'Message: '.$e->getMessage().PHP_EOL
+                       .'Trace: '.$e->getTraceAsString()  
+                    ));
         }
-
-        return $q->fetchAll();
+        
+        return $query;
     }
 
     /**
@@ -64,12 +68,15 @@ class DBDriver implements DBDriverInterface
 
         $query = "INSERT INTO $table ($columns_s) VALUES ($masks_s)";
 
+        try {
         $q = $this->pdo->prepare($query);
         $q->execute($obj);
-
-        if ($q->errorCode() != \PDO::ERR_NONE) {
-            $info = $q->errorInfo();
-            die($info[2]);
+        } catch (\PDOException $e){
+            die (nl2br(
+                        'Filed connect to DB'.PHP_EOL
+                       .'Message: '.$e->getMessage().PHP_EOL
+                       .'Trace: '.$e->getTraceAsString()  
+                    ));
         }
 
         return $this->pdo->lastInsertId();
@@ -99,12 +106,15 @@ class DBDriver implements DBDriverInterface
         $sets_s = implode(', ', $sets);
         $query = "UPDATE $table SET $sets_s WHERE $where";
          
+        try {
         $q = $this->pdo->prepare($query);
         $q->execute($obj);
-
-        if ($q->errorCode() != \PDO::ERR_NONE) {
-            $info = $q->errorInfo();
-            die($info[2]);
+        } catch (\PDOException $e){
+            die (nl2br(
+                        'Filed connect to DB'.PHP_EOL
+                       .'Message: '.$e->getMessage().PHP_EOL
+                       .'Trace: '.$e->getTraceAsString()  
+                    ));
         }
 
         return $q->rowCount();
@@ -121,12 +131,15 @@ class DBDriver implements DBDriverInterface
     {
         $query = "DELETE FROM $table WHERE $where";
         
+        try {
         $q = $this->pdo->prepare($query);
         $q->execute();
-
-        if ($q->errorCode() != \PDO::ERR_NONE) {
-            $info = $q->errorInfo();
-            die($info[2]);
+        } catch (\PDOException $e){
+            die (nl2br(
+                        'Filed connect to DB'.PHP_EOL
+                       .'Message: '.$e->getMessage().PHP_EOL
+                       .'Trace: '.$e->getTraceAsString()  
+                    ));
         }
 
         return $q->rowCount();

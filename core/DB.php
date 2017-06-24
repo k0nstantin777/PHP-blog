@@ -31,8 +31,18 @@ class DB
         $opt = [
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ];
-
-        return new PDO($dsn, DB_USER, DB_PASS, $opt);
+        
+        try{
+            $pdo = new PDO($dsn, DB_USER, DB_PASS, $opt);
+        } catch (\PDOException $e){
+            die (nl2br(
+                        'Filed connect to DB'.PHP_EOL
+                       .'Message: '.$e->getMessage().PHP_EOL
+                       .'Trace: '.$e->getTraceAsString()  
+                    ));
+        }
+        
+        return $pdo;
     }
 
 }
