@@ -8,38 +8,58 @@ namespace core;
  */
 interface ResponseInterface
 {
-    public function __construct();
+    /**
+     * Конструктор 
+     * 
+     * @param string $file_template имя файла шаблона.php
+     * @param array $vars переменные отправляеме в шаблон
+     * @param string $header заголовок
+     * @param string $status статуса ответа
+     */
+    public function __construct($file_template, array $vars = [], $header = '', $status = 'HTTP/1.1 200 Ok');
     
     /**
      * Подключение шаблона
-     * @param string $path
-     * @param array $vars
      * 
-     * @return file шаблон страницы
+     * @return string шаблон страницы
      */
-    public function Template($path, $vars = []);
+    public function Template();
     
     /**
      * Установка заголовков ответа сервера
-     * @param string $header
      * 
      * @return string
      */
-    public function SetHeader($header);
+    public function SetHeader();
     
     /**
-     * Установка параметров: сессии, куки
-     * @param string $param
-     * 
-     * @return true
-     */
-    public function SetParams($param);
-    
-    /**
-     * Отлавливание ошибок и вывод на экран
-     * @request string запрос на поиск ошибок
+     * Установка статусов ответа сервера
      * 
      * @return string
      */
-    public function ErrorView($request);
+    public function SetStatus();
+    
+    /**
+     * Установка параметров Cookie
+     * @param string $params
+     * 
+     * @return string
+     */
+    public function SetCookie(array $params);
+    
+    
+    /**
+     * Установка параметров Session
+     * @param string $params
+     * 
+     * @return string
+     */
+    public function SetSession(array $params);
+    
+    /**
+     * Отправка ответа клиенту
+     *  
+     * @return string
+     */
+    public function SendResponse();
 }
