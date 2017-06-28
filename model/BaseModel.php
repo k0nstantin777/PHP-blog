@@ -34,7 +34,7 @@ abstract class BaseModel
     /**
      * Вывод всех записей из таблицы $this->table
      * 
-     * @return type
+     * @return bool
      */
     public function getAll () 
     {
@@ -50,7 +50,7 @@ abstract class BaseModel
      */
     public function getOne ($id) 
     {
-        $one = $this->db->Query("SELECT * FROM {$this->table} WHERE {$this->id_name} = '$id' LIMIT 1");
+        $one = $this->db->Query("SELECT * FROM {$this->table} WHERE {$this->id_name} = :id LIMIT 1", ['id' => $id]);
         return !empty($one) ? $one[0] : false;
     }
     
@@ -59,7 +59,7 @@ abstract class BaseModel
      * 
      * @param integer $count
      * 
-     * @return true|false;
+     * @return bool;
      */
     public function getRandLimit ($count)
     {
@@ -71,11 +71,11 @@ abstract class BaseModel
      * 
      * @param integer $id
      * 
-     * @return true|false;
+     * @return bool;
      */
     public function delete($id) 
     {
-        return $this->db->Delete("{$this->table}", "{$this->id_name} = '$id'");
+        return $this->db->Delete("{$this->table}", "{$this->id_name} = :id", ['id'=>$id]);
     }
     
     /**
@@ -83,7 +83,7 @@ abstract class BaseModel
      * 
      * @param array $params
      * 
-     * @return true|false; 
+     * @return bool; 
      */
     public function add(array $params)
     {
@@ -95,14 +95,14 @@ abstract class BaseModel
      * 
      * @param array $params 
      * 
-     * @return true|false;
+     * @return bool;
      */
     public function edit(array $params)
     {
         $id = $params[$this->id_name];
         unset ($params[$this->id_name]);
         
-        return $this->db->Update("$this->table", $params, "{$this->id_name} = '$id'");
+        return $this->db->Update("$this->table", $params, "{$this->id_name} = :id", ['id'=>$id]);
     }
 }
  

@@ -21,14 +21,15 @@ class DBDriver implements DBDriverInterface
     /**
      * Произвользная выборка из БД
      * @param string $sql
+     * @param array $params параметры запроса
      * 
      * @return array 
      */
-    public function Query($sql)
+    public function Query($sql, array $params = [])
     {
         try {
             $q = $this->pdo->prepare($sql);
-            $q->execute();
+            $q->execute($params);
             $query = $q->fetchAll();
         } catch (\PDOException $e){
             die (nl2br(
@@ -87,10 +88,11 @@ class DBDriver implements DBDriverInterface
      * @param string $table
      * @param array $obj
      * @param stirng $where
+     * @param array $params параметры запроса
      * 
      * @return integer updated rows count
      */
-    public function Update($table, array $obj, $where)
+    public function Update($table, array $obj, $where, array $params = [])
     {
         $sets = [];
 
@@ -108,7 +110,7 @@ class DBDriver implements DBDriverInterface
          
         try {
         $q = $this->pdo->prepare($query);
-        $q->execute($obj);
+        $q->execute(array_merge($obj,$params));
         } catch (\PDOException $e){
             die (nl2br(
                         'Filed connect to DB'.PHP_EOL
@@ -124,16 +126,17 @@ class DBDriver implements DBDriverInterface
      * Удаление записи с условием $where из таблицы $table
      * @param string $table
      * @param string $where
+     * @param array $params параметры запроса
      * 
      * @return integer deleted rows count
      */    
-    public function Delete($table, $where)
+    public function Delete($table, $where, array $params = [])
     {
         $query = "DELETE FROM $table WHERE $where";
         
         try {
         $q = $this->pdo->prepare($query);
-        $q->execute();
+        $q->execute($params);
         } catch (\PDOException $e){
             die (nl2br(
                         'Filed connect to DB'.PHP_EOL

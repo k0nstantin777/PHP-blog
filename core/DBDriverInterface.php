@@ -14,11 +14,11 @@ interface DBDriverInterface
 
     /**
      * @param string $sql запрос
-     * @param string $fetch тип выводимых данных
+     * @param array $params параметры запроса
      *
      * @return array|integer
      */
-    public function Query($sql);
+    public function Query($sql, array $params);
 
     /**
      * @param string $table таблица для вставки
@@ -32,16 +32,18 @@ interface DBDriverInterface
      * @param string $table
      * @param array  $obj
      * @param string $where
+     * @param array $params параметры запроса
      * 
      * @return integer updated rows count
      */
-    public function Update($table, array $obj, $where);
+    public function Update($table, array $obj, $where, array $params);
 
     /**
      * @param string $table
      * @param string $where
+     * @param array $params параметры запроса
      * 
      * @return integer deleted rows count
      */
-    public function Delete($table, $where);
+    public function Delete($table, $where, array $params);
 }
