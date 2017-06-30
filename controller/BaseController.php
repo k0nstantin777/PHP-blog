@@ -9,7 +9,8 @@
 namespace controller;
 
 use core\Core,
-    core\Request;
+    core\Request,
+    core\exception\PageNotFoundException;
 
 class BaseController
 {
@@ -36,8 +37,13 @@ class BaseController
             $this->login = true;
             $this->user = $_SESSION['login'];
         }
-        
+
         $this->request = $request;
+    }
+
+    public function __call($name, $args)
+    {
+        throw new PageNotFoundException();
     }
 
     /* вывод шаблона страницы в браузере */
@@ -56,10 +62,10 @@ class BaseController
 
     /* ошибка 404 */
 
-    public function er404Action()
+    public function er404Action($msg)
     {
         $this->title = 'Ошибка 404';
-        $this->content = $this->template('404');
+        $this->content = $this->template('404', ['msg' => $msg]);
         header("HTTP/1.1 404 Not Found");
     }
 

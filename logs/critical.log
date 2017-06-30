@@ -1,0 +1,67 @@
+
+
+Date: 2017-06-30 23:44:28
+Level: ERROR
+Text: SQLSTATE[HY000] [1049] Unknown database 'id1764497_blog1'
+#0 /home/bumer/www/php1.loc/blog/core/DB.php(45): PDO->__construct('mysql:host=loca...', 'id1764497_root', 'noskovkos', Array)
+#1 /home/bumer/www/php1.loc/blog/core/DB.php(21): core\DB::connect()
+#2 /home/bumer/www/php1.loc/blog/controller/PostController.php(25): core\DB::get()
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(40): controller\PostController->__construct(Object(core\Request))
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-06-30 23:46:51
+Level: ERROR
+Text: SQLSTATE[HY000] [1049] Unknown database 'id1764497_blog1'
+#0 /home/bumer/www/php1.loc/blog/core/DB.php(45): PDO->__construct('mysql:host=loca...', 'id1764497_root', 'noskovkos', Array)
+#1 /home/bumer/www/php1.loc/blog/core/DB.php(21): core\DB::connect()
+#2 /home/bumer/www/php1.loc/blog/controller/PostController.php(25): core\DB::get()
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(40): controller\PostController->__construct(Object(core\Request))
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-06-30 23:53:03
+Level: ERROR
+Text: SQLSTATE[HY000] [1045] Access denied for user 'id1764497_root'@'localhost' (using password: YES)
+#0 /home/bumer/www/php1.loc/blog/core/DB.php(45): PDO->__construct('mysql:host=loca...', 'id1764497_root', 'noskovkos1', Array)
+#1 /home/bumer/www/php1.loc/blog/core/DB.php(21): core\DB::connect()
+#2 /home/bumer/www/php1.loc/blog/controller/PostController.php(25): core\DB::get()
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(40): controller\PostController->__construct(Object(core\Request))
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-06-30 23:58:28
+Level: ERROR
+Text: SQLSTATE[HY000] [1045] Access denied for user 'id1764497_root'@'localhost' (using password: YES)
+#0 /home/bumer/www/php1.loc/blog/core/DB.php(45): PDO->__construct('mysql:host=loca...', 'id1764497_root', 'noskovkos1', Array)
+#1 /home/bumer/www/php1.loc/blog/core/DB.php(21): core\DB::connect()
+#2 /home/bumer/www/php1.loc/blog/controller/PostController.php(25): core\DB::get()
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(40): controller\PostController->__construct(Object(core\Request))
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-06-30 23:59:06
+Level: ERROR
+Text: SQLSTATE[HY000] [1045] Access denied for user 'id1764497_root'@'localhost' (using password: YES)
+#0 /home/bumer/www/php1.loc/blog/core/DB.php(45): PDO->__construct('mysql:host=loca...', 'id1764497_root', 'noskovkos1', Array)
+#1 /home/bumer/www/php1.loc/blog/core/DB.php(21): core\DB::connect()
+#2 /home/bumer/www/php1.loc/blog/controller/PostController.php(25): core\DB::get()
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(40): controller\PostController->__construct(Object(core\Request))
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-07-01 00:30:13
+Level: ERROR
+Text: SQLSTATE[HY000] [1045] Access denied for user 'id1764497_root'@'localhost' (using password: YES)
+#0 /home/bumer/www/php1.loc/blog/core/DB.php(45): PDO->__construct('mysql:host=loca...', 'id1764497_root', 'noskovkos1', Array)
+#1 /home/bumer/www/php1.loc/blog/core/DB.php(21): core\DB::connect()
+#2 /home/bumer/www/php1.loc/blog/controller/PostController.php(25): core\DB::get()
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(37): controller\PostController->__construct(Object(core\Request))
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************

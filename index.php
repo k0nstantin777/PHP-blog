@@ -4,20 +4,23 @@
  */    
     include_once 'config.php';
     
-    $request = new core\Request($_GET, $_POST, $_FILES, $_COOKIE, $_SERVER, $_SESSION);
-        
-    
-    /* определяем контроллер, по умолчанию PostController */
-    $controller = $request->getController();
-    
-    /* определяем метод, по умолчанию indexAction, если метод не найден то er404Action */
-    $action = $request->getAction();
-    
-    $controller = new $controller($request);
+    $app = new core\Application();
 
-    $controller->$action(); 
-
-    $controller->response();
+    $app->run();
+//    $request = new core\Request($_GET, $_POST, $_FILES, $_COOKIE, $_SERVER, $_SESSION);
+//        
+//    
+//    /* определяем контроллер, по умолчанию PostController */
+//    $controller = $request->getController();
+//    
+//    /* определяем метод, по умолчанию indexAction, если метод не найден то er404Action */
+//    $action = $request->getAction();
+//    
+//    $controller = new $controller($request);
+//
+//    $controller->$action(); 
+//
+//    $controller->response();
         
    
    

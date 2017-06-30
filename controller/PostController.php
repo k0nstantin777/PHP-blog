@@ -42,7 +42,7 @@ class PostController extends BaseController
     /* страница вывода одной статьи /post */
     public function postAction() 
     {
-        $id = $this->request->getId();
+        $id = $this->request->get['id'];
         if ($article = $this->mArticles->getOne($id)){
             $this->content = $this->template('view_post', [
                 'login' => $this->login,
@@ -52,7 +52,7 @@ class PostController extends BaseController
             $this->title = $article['title'];
             $this->aside = '';    
         } else {
-            $this->er404Action();
+            $this->er404Action('Ooooops... Something went wrong!');
         }
     }
 
@@ -116,7 +116,7 @@ class PostController extends BaseController
     /* страница редактрирование статьи /edit/id */
     public function editAction()
     {
-        $id = $this->request->getId();
+        $id = $this->request->get['id'];
         /* проверка отправки формы методом POST */
         if ($this->request->isPost()){
             $msg = '';
@@ -155,14 +155,14 @@ class PostController extends BaseController
             ]);
             $this->title = 'Изменить статью';        
         } else {
-            $this->er404Action();
+            $this->er404Action('Ooooops... Something went wrong!');
         }     
     }
     
     /* удаление статьи /delete/id */
     public function deleteAction()
     {
-        $id = $this->request->getId();
+        $id = $this->request->get['id'];
         if(!$this->login){
         header("Location: ".BASE_PATH. "login");
         exit();

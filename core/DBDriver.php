@@ -35,10 +35,10 @@ class DBDriver implements DBDriverInterface
             die (nl2br(
                         'Filed connect to DB'.PHP_EOL
                        .'Message: '.$e->getMessage().PHP_EOL
-                       .'Trace: '.$e->getTraceAsString()  
+                       .'Trace: '.PHP_EOL.$e->getTraceAsString()  
                     ));
         }
-        
+                    
         return $query;
     }
 
@@ -70,13 +70,13 @@ class DBDriver implements DBDriverInterface
         $query = "INSERT INTO $table ($columns_s) VALUES ($masks_s)";
 
         try {
-        $q = $this->pdo->prepare($query);
-        $q->execute($obj);
+            $q = $this->pdo->prepare($query);
+            $q->execute($obj);
         } catch (\PDOException $e){
             die (nl2br(
                         'Filed connect to DB'.PHP_EOL
                        .'Message: '.$e->getMessage().PHP_EOL
-                       .'Trace: '.$e->getTraceAsString()  
+                       .'Trace: '.PHP_EOL.$e->getTraceAsString()  
                     ));
         }
 
@@ -87,7 +87,7 @@ class DBDriver implements DBDriverInterface
      * Обновление таблицы $table, записать массив $obj c условием $where
      * @param string $table
      * @param array $obj
-     * @param stirng $where
+     * @param string $where
      * @param array $params параметры запроса
      * 
      * @return integer updated rows count
@@ -109,13 +109,13 @@ class DBDriver implements DBDriverInterface
         $query = "UPDATE $table SET $sets_s WHERE $where";
          
         try {
-        $q = $this->pdo->prepare($query);
-        $q->execute(array_merge($obj,$params));
+            $q = $this->pdo->prepare($query);
+            $q->execute(array_merge($obj,$params));
         } catch (\PDOException $e){
             die (nl2br(
                         'Filed connect to DB'.PHP_EOL
                        .'Message: '.$e->getMessage().PHP_EOL
-                       .'Trace: '.$e->getTraceAsString()  
+                       .'Trace: '.PHP_EOL.$e->getTraceAsString()  
                     ));
         }
 
@@ -135,13 +135,13 @@ class DBDriver implements DBDriverInterface
         $query = "DELETE FROM $table WHERE $where";
         
         try {
-        $q = $this->pdo->prepare($query);
-        $q->execute($params);
+            $q = $this->pdo->prepare($query);
+            $q->execute($params);
         } catch (\PDOException $e){
             die (nl2br(
                         'Filed connect to DB'.PHP_EOL
                        .'Message: '.$e->getMessage().PHP_EOL
-                       .'Trace: '.$e->getTraceAsString()  
+                       .'Trace: '.PHP_EOL. $e->getTraceAsString()  
                     ));
         }
 

@@ -63,7 +63,7 @@
 			</div>
 		</footer>
 	</div>	
-	<script src="<?=BASE_PATH?>js/jquery-1.11.0.min.js" type="text/javascript"></script>
-	<script src="<?=BASE_PATH?>js/scripts.js" type="text/javascript"></script>
+	<script src="<?=BASE_PATH?>style/js/jquery-1.11.0.min.js" type="text/javascript"></script>
+	<script src="<?=BASE_PATH?>style/js/scripts.js" type="text/javascript"></script>
 </body>
 </html>
