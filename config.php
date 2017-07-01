@@ -25,7 +25,7 @@
     define('DB_USER', 'id1764497_root');
     
     //Pass к БД
-    define('DB_PASS', 'noskovkos1');
+    define('DB_PASS', 'noskovkos');
     
     //соль для получения Хеша
     define('SAULT', '3428732jhgjdahf');
@@ -39,7 +39,7 @@
     //метод контроллера по умолчанию
     define('DEFAULT_ACTION', 'index');
     
-    //режим разработчика true - включен, false - выключен
+    //режим разработчика: true - включен, false - выключен
     define('DEVELOP', false);
     
     //директорая хранения логов

@@ -16,8 +16,8 @@ class UserModel extends BaseModel
 
     public function __construct(DBDriverInterface $db)
     {
-        parent::__construct($db);
         $this->table = 'users';
         $this->id_name = 'login';
+        parent::__construct($db);
     }
 }

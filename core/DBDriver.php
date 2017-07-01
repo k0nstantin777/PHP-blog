@@ -1,7 +1,8 @@
 <?php
 
 namespace core;
-use core\DBDriverInterface;
+use core\DBDriverInterface,
+    core\Core;
 
 /**
  * DBDriver
@@ -32,11 +33,7 @@ class DBDriver implements DBDriverInterface
             $q->execute($params);
             $query = $q->fetchAll();
         } catch (\PDOException $e){
-            die (nl2br(
-                        'Filed connect to DB'.PHP_EOL
-                       .'Message: '.$e->getMessage().PHP_EOL
-                       .'Trace: '.PHP_EOL.$e->getTraceAsString()  
-                    ));
+            die (Core::errSendtoScr($e));
         }
                     
         return $query;
@@ -73,11 +70,7 @@ class DBDriver implements DBDriverInterface
             $q = $this->pdo->prepare($query);
             $q->execute($obj);
         } catch (\PDOException $e){
-            die (nl2br(
-                        'Filed connect to DB'.PHP_EOL
-                       .'Message: '.$e->getMessage().PHP_EOL
-                       .'Trace: '.PHP_EOL.$e->getTraceAsString()  
-                    ));
+            die (Core::errSendtoScr($e));
         }
 
         return $this->pdo->lastInsertId();
@@ -112,11 +105,7 @@ class DBDriver implements DBDriverInterface
             $q = $this->pdo->prepare($query);
             $q->execute(array_merge($obj,$params));
         } catch (\PDOException $e){
-            die (nl2br(
-                        'Filed connect to DB'.PHP_EOL
-                       .'Message: '.$e->getMessage().PHP_EOL
-                       .'Trace: '.PHP_EOL.$e->getTraceAsString()  
-                    ));
+            die (Core::errSendtoScr($e));
         }
 
         return $q->rowCount();
@@ -138,11 +127,7 @@ class DBDriver implements DBDriverInterface
             $q = $this->pdo->prepare($query);
             $q->execute($params);
         } catch (\PDOException $e){
-            die (nl2br(
-                        'Filed connect to DB'.PHP_EOL
-                       .'Message: '.$e->getMessage().PHP_EOL
-                       .'Trace: '.PHP_EOL. $e->getTraceAsString()  
-                    ));
+            die (Core::errSendtoScr($e));
         }
 
         return $q->rowCount();

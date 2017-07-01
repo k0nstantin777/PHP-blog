@@ -12,7 +12,13 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/bumer/www/php1.loc/blog/index.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/core/Application.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/config.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/core/exception/BaseException.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/logs/critical.log</file>
+            <file>file:/home/bumer/www/php1.loc/blog/core/Logger.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/core/DBDriver.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/core/DB.php</file>
         </group>
     </open-files>
 </project-private>

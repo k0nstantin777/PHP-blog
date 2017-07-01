@@ -6,18 +6,33 @@ use core\exception\PageNotFoundException,
     core\exception\BaseException,
     core\Logger,
     controller\BaseController,
-    core\Request;
+    core\Request,
+    core\Core;
 
 /**
- * Application
+ * Application движок сайта
  *
  * @author Noskov Konstantin <noskov.kos@gmail.com>
  */
 class Application
 {
 
+    /**
+     * Объект класса core\Request
+     * @var object
+     */
     public $request;
+    
+    /**
+     * Класс контроллера
+     * @var stirng
+     */
     private $controller;
+    
+    /**
+     * Вызываемый метод контроллера
+     * @var string
+     */
     private $action;
 
     public function __construct()
@@ -26,6 +41,12 @@ class Application
         $this->handlingUri();
     }
 
+    /**
+     * Запуск блога
+     * 
+     * @throws PageNotFoundException
+     * 
+     */
     public function run()
     {
         try {
@@ -35,46 +56,57 @@ class Application
             }
 
             $ctrl = new $this->controller($this->request);
+            
             $action = $this->action;
 
             $ctrl->$action();
+            
             $ctrl->response();
         } catch (\PDOException $e) {
-             // TODO определить режим работы сайта
+            //Если режим DEVELOP отключен, ошибки пишем в лог, и отправляем на экран шаблон страницы с ошибкой
             if (!DEVELOP) {
-                $this->errorSend($e, 'critical', 'ERROR', 'Ooooops... Something went wrong!');
+                $this->errLog($e, 'critical', 'ERROR');
+                $this->errSend('Ooooops... Something went wrong!');
             } else {
-                die(nl2br(
-                'Filed connect to DB' . PHP_EOL
-                . 'Message: ' . $e->getMessage() . PHP_EOL
-                . 'Trace: ' . PHP_EOL . $e->getTraceAsString()
-                ));
+                die(Core::errSendtoScr($e));
             }
         } catch (PageNotFoundException $e) {
+
             if (!DEVELOP) {
-                $ctrl = new BaseController($this->request);
-                $ctrl->er404Action('Error 404 - Page not found!');
-                $ctrl->response();
+                $this->errSend('Error 404 - Page not found!');
             } else {
-                
+                die(Core::errSendtoScr($e));
             }
         } catch (\Exception $e) {
 
-            $logger = new Logger('critical', LOG_DIR);
-            $logger->write(sprintf("%s\n%s", $e->getMessage(), $e->getTraceAsString()), 'ERROR');
-
-            // TODO определить режим работы сайта
-
-            $ctrl = new BaseController($this->request);
-            $ctrl->er404Action('Ooooops... Something went wrong!');
-            $ctrl->response();
+            if (!DEVELOP) {
+                $this->errLog($e, 'critical', 'ERROR');
+                $this->errSend('Ooooops... Something went wrong!');
+            } else {
+                die(Core::errSendtoScr($e));
+            }
         }
     }
 
-    private function errorSend($exception, $filename, $level, $msg)
+    /**
+     * Логирование ошибок (метод вызывается, если режим DEVELOP в config выключен == false)
+     * 
+     * @param object $exceptObject объект вызванного класса Exception 
+     * @param string $filename имя файла для хранения логов
+     * @param string $level уровень ошибки (по умолчанию пустая строка)
+     */
+    private function errLog($exceptObject, $filename, $level)
     {
         $logger = new Logger($filename, LOG_DIR);
-        $logger->write(sprintf("%s\n%s", $exception->getMessage(), $exception->getTraceAsString()), $level);
+        $logger->write(sprintf("%s\n%s", $exceptObject->getMessage(), $exceptObject->getTraceAsString()), $level);
+    }
+
+    /**
+     * Вывод ошибки на экран (метод вызвывается, если режим DEVELOP в config выключен == false)
+     * @param string $msg
+     */
+    private function errSend($msg)
+    {
         $ctrl = new BaseController($this->request);
         $ctrl->er404Action($msg);
         $ctrl->response();
@@ -127,7 +159,7 @@ class Application
                 $controller = 'Page';
                 break;
             default:
-                $controller = 'Base';
+                $controller = false;
                 break;
         }
 

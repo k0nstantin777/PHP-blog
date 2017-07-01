@@ -32,18 +32,8 @@ class DB
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, 
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ];
-        
-//        try{
-//            $pdo = new PDO($dsn, DB_USER, DB_PASS, $opt);
-//        } catch (\PDOException $e){
-//            die (nl2br(
-//                        'Filed connect to DB'.PHP_EOL
-//                       .'Message: '.$e->getMessage().PHP_EOL
-//                       .'Trace: '.$e->getTraceAsString()  
-//                    ));
-//        }
-        $pdo = new PDO($dsn, DB_USER, DB_PASS, $opt);
-        return $pdo;
+           
+        return new PDO($dsn, DB_USER, DB_PASS, $opt);
     }
 
 }

@@ -3,7 +3,7 @@
 /**
  * Модель постов
  *
- * @author bumer
+ * @author Noskov Konstantin <noskov.kos@gmail.com>
  */
 namespace model;
 use model\BaseModel,
@@ -14,8 +14,8 @@ class PostModel extends BaseModel
 {
     public function __construct(DBDriverInterface $db)
     {
-        parent::__construct($db);
         $this->table = 'articles';
         $this->id_name = 'id_article';
+        parent::__construct($db);
     }
 }
