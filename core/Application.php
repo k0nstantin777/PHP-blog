@@ -3,11 +3,9 @@
 namespace core;
 
 use core\exception\PageNotFoundException,
-    core\exception\BaseException,
-    core\Logger,
-    controller\BaseController,
-    core\Request,
-    core\Core;
+    core\exception\ValidatorException,
+    controller\BaseController;
+    
 
 /**
  * Application движок сайта
@@ -22,13 +20,13 @@ class Application
      * @var object
      */
     public $request;
-    
+
     /**
      * Класс контроллера
      * @var stirng
      */
     private $controller;
-    
+
     /**
      * Вызываемый метод контроллера
      * @var string
@@ -56,62 +54,41 @@ class Application
             }
 
             $ctrl = new $this->controller($this->request);
-            
+
             $action = $this->action;
 
             $ctrl->$action();
-            
+
             $ctrl->response();
         } catch (\PDOException $e) {
-            //Если режим DEVELOP отключен, ошибки пишем в лог, и отправляем на экран шаблон страницы с ошибкой
-            if (!DEVELOP) {
-                $this->errLog($e, 'critical', 'ERROR');
-                $this->errSend('Ooooops... Something went wrong!');
-            } else {
-                die(Core::errSendtoScr($e));
-            }
+            (
+                new ErrorHandler(
+                    new BaseController($this->request), 
+                    new Logger('critical', LOG_DIR),
+                    DEVELOP
+                )
+            )->handle($e, 'Ooooops... Something went wrong!');
+            
         } catch (PageNotFoundException $e) {
-
-            if (!DEVELOP) {
-                $this->errSend('Error 404 - Page not found!');
-            } else {
-                die(Core::errSendtoScr($e));
-            }
+            (
+                new ErrorHandler(
+                    new BaseController($this->request),
+                    null,
+                    DEVELOP
+                )
+            )->handle($e, 'Error 404 - Page not found!');
+            
         } catch (\Exception $e) {
-
-            if (!DEVELOP) {
-                $this->errLog($e, 'critical', 'ERROR');
-                $this->errSend('Ooooops... Something went wrong!');
-            } else {
-                die(Core::errSendtoScr($e));
-            }
+            (
+                new ErrorHandler(
+                    new BaseController($this->request), 
+                    new Logger('critical', LOG_DIR),
+                    DEVELOP
+                )
+            )->handle($e, 'Ooooops... Something went wrong!');
         }
     }
-
-    /**
-     * Логирование ошибок (метод вызывается, если режим DEVELOP в config выключен == false)
-     * 
-     * @param object $exceptObject объект вызванного класса Exception 
-     * @param string $filename имя файла для хранения логов
-     * @param string $level уровень ошибки (по умолчанию пустая строка)
-     */
-    private function errLog($exceptObject, $filename, $level)
-    {
-        $logger = new Logger($filename, LOG_DIR);
-        $logger->write(sprintf("%s\n%s", $exceptObject->getMessage(), $exceptObject->getTraceAsString()), $level);
-    }
-
-    /**
-     * Вывод ошибки на экран (метод вызвывается, если режим DEVELOP в config выключен == false)
-     * @param string $msg
-     */
-    private function errSend($msg)
-    {
-        $ctrl = new BaseController($this->request);
-        $ctrl->er404Action($msg);
-        $ctrl->response();
-    }
-
+    
     /**
      * Создаем объект класса Request
      */

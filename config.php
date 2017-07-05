@@ -40,7 +40,7 @@
     define('DEFAULT_ACTION', 'index');
     
     //режим разработчика: true - включен, false - выключен
-    define('DEVELOP', false);
+    define('DEVELOP', true);
     
     //директорая хранения логов
     define('LOG_DIR', __DIR__ . '/logs');

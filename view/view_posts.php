@@ -9,7 +9,7 @@
         </span>
         <?php if ($login === true):?>
             <a href="<?=BASE_PATH?>edit/<?= $article['id_article'] ?>" class="option edit" title="Изменить" name = "<?= $article['title'] ?>"><i class="fa fa-edit"></i></a>
-            <a href="<?=BASE_PATH?>delete/<?= $article['id_article'] ?>"class="option del" title="Удалить" name = "<?= $article['title'] ?>" onclick="return confirm('Удалить статью: \'<?= $article['title'] ?>\' ?');"> <i class="fa fa-times-circle-o"></i></a>
+            <a href="<?=BASE_PATH?>delete/<?= $article['id_article'] ?>" class="option del" title="Удалить" name = "<?= $article['title'] ?>" onclick="return confirm('Удалить статью: \'<?= $article['title'] ?>\' ?');"> <i class="fa fa-times-circle-o"></i></a>
         <?php endif;?>
     </li>
     <?php endforeach; ?> 

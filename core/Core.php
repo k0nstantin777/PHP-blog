@@ -8,7 +8,8 @@
 namespace core;
 use model\UserModel,
     core\DB, 
-    core\DBDriver;    
+    core\DBDriver,
+    core\Validator;
 
 class Core {
     /* аутентификация */
@@ -17,7 +18,7 @@ class Core {
         if(!isset($_SESSION['auth'])){
             $login = self::getCookie('login');
             $pass = self::getCookie('password');
-            $userLogin = new UserModel(new DBDriver(DB::get()));
+            $userLogin = new UserModel(new DBDriver(DB::get()), new Validator());
             if ($user = $userLogin->getOne($login)){
                 if($login == $user['login'] && $pass == $user['password']){
                     $_SESSION['auth'] = true;
@@ -65,19 +66,4 @@ class Core {
         unset($_COOKIE[$name]); 
     }
     
-    
-    /**
-     * Вывод ошибки на экран в режиме DEVELOP == true
-     * @param object $exceptObj
-     * 
-     * @return string 
-     */
-    public static function errSendtoScr($exceptObj)
-    {
-        return nl2br(
-                    'Сaught error : ' . get_class($exceptObj) . PHP_EOL  
-                  . 'Message: ' . $exceptObj->getMessage() . PHP_EOL
-                  . 'Trace: ' . PHP_EOL . $exceptObj->getTraceAsString()
-                );
-    }
 }

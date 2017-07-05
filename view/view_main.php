@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width">
 	<link href="<?=BASE_PATH?>style/styles.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-        <link href="<?=BASE_PATH?>favicon.ico" rel="shortcut icon" type="image/x-icon">
+        <link href="<?=BASE_PATH?>style/img/favicon.ico" rel="shortcut icon" type="image/x-icon">
 	<title><?=$title?></title>
 </head>
 <body>

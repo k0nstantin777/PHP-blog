@@ -13,7 +13,9 @@ use controller\BaseController,
     core\Core,
     core\DB,
     core\DBDriver,
-    core\Request;
+    core\Validator,
+    core\Request,
+    core\exception\ValidatorException;
 
 class PostController extends BaseController
 {
@@ -23,7 +25,7 @@ class PostController extends BaseController
     public function __construct(Request $request)
     {
         parent::__construct($request);
-        $this->mArticles = new PostModel(new DBDriver(DB::get()));
+        $this->mArticles = new PostModel(new DBDriver(DB::get()), new Validator());
         $this->menu = $this->template('view_menu', [
             'articles' => $this->mArticles->getAll(),
             'login' => $this->login,
@@ -65,7 +67,7 @@ class PostController extends BaseController
         $msg = '';
 
         if ($this->login === true) {
-            $success = isset($this->request->get['success']) ? $this->request->getParam($this->request->get['success']) : '';
+            $success = isset($this->request->get['success']) ? $this->request->get['success'] : '';
             $msgs = ['edit' => 'Изменения сохранены', 'add' => 'Статья добавлена', 'delete' => 'Статья удалена'];
             $msg = isset($msgs[$success]) ? $msgs[$success] : '';
         }
@@ -84,17 +86,17 @@ class PostController extends BaseController
     public function addAction()
     {
         if ($this->request->isPost()) {
-            $name = $this->request->getParam($this->request->post['title']);
-            $text = $this->request->getParam($this->request->post['content']);
-            if ($name == '' || $text == '') {
-                $msg = 'Заполните все поля';
-            } elseif (!Core::checkName($name, 'article')) {
-                $msg = 'Запрещенные символы в поле "Имя"';
-            } else {
-                $this->mArticles->add(['title' => $name, 'text' => $text]);
-                header("Location:" . BASE_PATH . "posts?success=add");
-                exit();
-            }
+            $name = $this->request->post['title'];
+            $text = $this->request->post['content'];
+                try {
+                    $this->mArticles->add(['title' => $name, 'text' => $text]);
+                    header("Location:" . BASE_PATH . "posts?success=add");
+                    exit();
+                } catch (ValidatorException $e) {
+                    $msg = $e->getMessage();
+                                   
+                }
+//            }
         } else {
             /* зашли на страницу методом GET */
             if (!$this->login) {
@@ -109,7 +111,7 @@ class PostController extends BaseController
         $this->content = $this->template('view_add', [
             'name' => $name,
             'text' => $text,
-            'back' => $this->request->getParam($this->request->server['HTTP_REFERER']),
+            'back' => $this->request->server['HTTP_REFERER'],
             'msg' => $msg
         ]);
 
@@ -124,19 +126,18 @@ class PostController extends BaseController
         /* проверка отправки формы методом POST */
         if ($this->request->isPost()) {
             $msg = '';
-            $name = $this->request->getParam($this->request->post['title']);
-            $text = $this->request->getParam($this->request->post['content']);
-            if (isset($name) && isset($text)) {
-                if (empty($name) || empty($text)) {
-                    $msg = 'Заполните все поля';
-                } elseif (!Core::checkName($name, 'article')) {
-                    $msg = 'Запрещенные символы в поле "Имя"';
-                } else {
+            $name = $this->request->post['title'];
+            $text = $this->request->post['content'];
+            
+                try {    
                     $this->mArticles->edit(['id_article' => $id, 'title' => $name, 'text' => $text]);
                     header("Location:" . BASE_PATH . "posts?success=edit");
                     exit();
+                } catch (ValidatorException $e) {
+                    $msg = $e->getMessage();
+                                   
                 }
-            }
+          
         } else {
             /* зашли на страницу методом GET */
             if (!$this->login) {
@@ -153,7 +154,7 @@ class PostController extends BaseController
             $this->content = $this->template('view_edit', [
                 'name' => $name,
                 'text' => $text,
-                'back' => $this->request->getParam($this->request->server['HTTP_REFERER']),
+                'back' => $this->request->server['HTTP_REFERER'],
                 'msg' => $msg,
             ]);
             $this->title = 'Изменить статью';
@@ -176,7 +177,7 @@ class PostController extends BaseController
             header("Location: " . BASE_PATH . "posts?success=delete");
             exit();
         } else {
-            $this->er404Action();
+            $this->er404Action('Ooooops... Something went wrong!');
         }
     }
 

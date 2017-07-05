@@ -12,7 +12,8 @@ use controller\BaseController,
     core\Core,
     core\DB,
     core\DBDriver,
-    core\Request;
+    core\Request,
+    core\Validator;
 
 
 class UserController extends BaseController {
@@ -20,7 +21,7 @@ class UserController extends BaseController {
     public function __construct(Request $request)
     {
         parent::__construct($request);
-        $this->mUsers = new UserModel(new DBDriver(DB::get()));
+        $this->mUsers = new UserModel(new DBDriver(DB::get()), new Validator());
     }   
     
     
@@ -31,8 +32,8 @@ class UserController extends BaseController {
         $msg = '';
         //проверка на POST или GET
         if ($this->request->isPost()) {
-            $login = $this->request->getParam($this->request->post['login']);
-            $password = $this->request->getParam($this->request->post['password']);
+            $login = $this->request->post['login'];
+            $password = $this->request->post['password'];
             $userLogin = $this->mUsers->getOne($login);
             if($login == '' || $password == ''){
                 $msg = 'Заполните все поля'; 
@@ -60,7 +61,7 @@ class UserController extends BaseController {
             Core::deleteCookie('password');
             $this->login = false;
             $this->user = 'Гость';
-            $success = isset($this->request->get['success']) ? $this->request->getParam($this->request->get['success']) : '';
+            $success = isset($this->request->get['success']) ? $this->request->get['success'] : '';
             $msgs = ['reg' => 'Регистрация прошла успешно, теперь вы можете авторизоваться'];
             $msg = isset($msgs[$success]) ? $msgs[$success] : '';
  
@@ -78,8 +79,8 @@ class UserController extends BaseController {
     {
         $msg = '';
         if($this->request->isPost()){
-            $login = $this->request->getParam($this->request->post['login']);
-            $password = $this->request->getParam($this->request->post['password']);
+            $login = $this->request->post['login'];
+            $password = $this->request->post['password'];
             if($login == '' || $password == ''){
                 $msg = 'Заполните все поля';
             } elseif (!Core::checkName($login, 'user')){ 
@@ -99,7 +100,7 @@ class UserController extends BaseController {
         }
 
         $this->content = $this->template('view_reg', [
-            'back' => $this->request->getParam($this->request->server['HTTP_REFERER']),
+            'back' => $this->request->server['HTTP_REFERER'],
             'msg'  => $msg,
             'login' => $login
         ]);

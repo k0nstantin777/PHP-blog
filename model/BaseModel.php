@@ -9,8 +9,8 @@
 namespace model;
 
 use core\DBDriverInterface,
-    core\exception\ModelException,
-    core\Core;
+    core\exception\ValidatorException,
+    core\ValidatorInterface;
 
 abstract class BaseModel
 {
@@ -32,16 +32,17 @@ abstract class BaseModel
      */
     protected $id_name;
 
-    public function __construct(DBDriverInterface $db)
+    /**
+     * экземпляр класса validator
+     * @var ValidatorInterface 
+     */
+    protected $validator;
+    
+
+    public function __construct(DBDriverInterface $db, ValidatorInterface $validator)
     {
         $this->db = $db;
-        try {
-            if (!$this->table) {
-                throw new ModelException('Table name is not defined.');
-            }
-        } catch (ModelException $e) {
-            die(Core::errSendtoScr($e));
-        }
+        $this->validator = $validator;
     }
 
     /**
@@ -99,7 +100,13 @@ abstract class BaseModel
      */
     public function add(array $params)
     {
-        return $this->db->Insert("{$this->table}", $params);
+        $this->validator->run($params);
+        var_dump($this->validator->clean);
+        if (!empty($this->validator->errors)) {
+            throw new ValidatorException(implode(' ', $this->validator->errors));
+        } else {
+            return $this->db->Insert("{$this->table}", $this->validator->clean);
+        }
     }
 
     /**
@@ -110,10 +117,18 @@ abstract class BaseModel
      */
     public function edit(array $params)
     {
+        $this->validator->run($params);
+        
+       
         $id = $params[$this->id_name];
         unset($params[$this->id_name]);
-
-        return $this->db->Update("$this->table", $params, "{$this->id_name} = :id", ['id' => $id]);
+        
+        if (!empty($this->validator->errors)) {
+            throw new ValidatorException(implode(' ', $this->validator->errors));
+        } else {
+            
+            return $this->db->Update("$this->table", $this->validator->clean, "{$this->id_name} = :id", ['id' => $id]);
+        }    
     }
 
 }
