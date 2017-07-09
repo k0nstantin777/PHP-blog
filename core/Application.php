@@ -161,7 +161,7 @@ class Application
      */
     private function getUriAsArr()
     {
-        $uri = explode('/', $this->request->getParam($this->request->get['q']));
+        $uri = explode('/', $this->request->get['q']);
         $uri_cnt = count($uri);
 
         if ($uri[$uri_cnt - 1] == '') {

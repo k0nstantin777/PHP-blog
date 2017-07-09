@@ -13,7 +13,9 @@ use controller\BaseController,
     core\DB,
     core\DBDriver,
     core\Request,
-    core\Validator;
+    core\Validator, 
+    core\exception\ValidatorException,
+    core\exception\PageNotFoundException;
 
 
 class UserController extends BaseController {
@@ -35,22 +37,23 @@ class UserController extends BaseController {
             $login = $this->request->post['login'];
             $password = $this->request->post['password'];
             $userLogin = $this->mUsers->getOne($login);
-            if($login == '' || $password == ''){
-                $msg = 'Заполните все поля'; 
-            } elseif ($login != '' && $userLogin === false){
+            if($login === '' || $password === ''){
+                $msg = 'Заполните все поля';
+            } else if ($login != '' && $userLogin === false){
                 $msg = 'Пользователя с таким логином не существует';
             } else {
                 if($login == $userLogin['login'] && Core::myCrypt($password) == $userLogin['password']){
                     $_SESSION['auth'] = true;
                     $_SESSION['login'] = $userLogin['login'];
 
-                    if($this->request->getParam($this->request->post['remember'])){
+                    if($this->request->post['remember']){
                         setcookie('login', $userLogin['login'], time() + 3600 * 24 * 365);
                         setcookie('password', $userLogin['password'], time() + 3600 * 24 * 365);
                     }
                     header("Location:". BASE_PATH . 'posts');
                     exit();
-                } else {
+                } 
+                else {
                     $msg = 'Неправильный пароль!';
                 }
             }     
@@ -62,8 +65,8 @@ class UserController extends BaseController {
             $this->login = false;
             $this->user = 'Гость';
             $success = isset($this->request->get['success']) ? $this->request->get['success'] : '';
-            $msgs = ['reg' => 'Регистрация прошла успешно, теперь вы можете авторизоваться'];
-            $msg = isset($msgs[$success]) ? $msgs[$success] : '';
+            $msges = ['reg' => 'Регистрация прошла успешно, теперь вы можете авторизоваться'];
+            $msg = isset($msges[$success]) ? $msges[$success] : '';
  
         }
     
@@ -79,30 +82,27 @@ class UserController extends BaseController {
     {
         $msg = '';
         if($this->request->isPost()){
-            $login = $this->request->post['login'];
-            $password = $this->request->post['password'];
-            if($login == '' || $password == ''){
-                $msg = 'Заполните все поля';
-            } elseif (!Core::checkName($login, 'user')){ 
-                $msg = 'Запрещенные символы в поле "Логин"'; 
-            } elseif ($this->mUsers->getOne($login)!==false){
-                $msg = 'Логин занят!'; 
-            } else {
-                $this->mUsers->add (['login'=> $login, 'password' => Core::myCrypt($password)]);     
-                header("Location: ".BASE_PATH. "login?success=reg");
-                exit();
-            } 
-        } else {
-            /* зашли на страницу методом GET */
-            $login = '';
-            $password = '';
-            $msg = '';
-        }
+            $login = $this->request->post['login'] ?? null;
+            $password = $this->request->post['password'] ?? null;
+
+                if ($this->mUsers->getOne($login)!==false){
+                        $msgs[] = 'Логин занят!'; 
+                } else {  
+                
+                    try {
+                        $this->mUsers->add (['login'=> $login, 'password' => Core::myCrypt($password), 'fields' => ['login', 'password']]);     
+                        header("Location: ".BASE_PATH. "login?success=reg");
+                        exit();
+                    } catch (ValidatorException $e) {
+                        $msgs = $e->getErrors();
+                    }    
+                } 
+        } 
 
         $this->content = $this->template('view_reg', [
             'back' => $this->request->server['HTTP_REFERER'],
-            'msg'  => $msg,
-            'login' => $login
+            'msgs'  => $msgs ?? [],
+            'login' => $this->request->post['login'] ?? ''
         ]);
         $this-> title = 'Регистрация'; 
     }

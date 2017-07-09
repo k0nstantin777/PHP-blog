@@ -36,13 +36,13 @@ abstract class BaseModel
      * экземпляр класса validator
      * @var ValidatorInterface 
      */
-    protected $validator;
-    
-
+    public $validator;
+   
     public function __construct(DBDriverInterface $db, ValidatorInterface $validator)
     {
         $this->db = $db;
         $this->validator = $validator;
+        
     }
 
     /**
@@ -101,12 +101,13 @@ abstract class BaseModel
     public function add(array $params)
     {
         $this->validator->run($params);
-        var_dump($this->validator->clean);
+        
         if (!empty($this->validator->errors)) {
-            throw new ValidatorException(implode(' ', $this->validator->errors));
-        } else {
-            return $this->db->Insert("{$this->table}", $this->validator->clean);
-        }
+            throw new ValidatorException($this->validator->errors);
+        } 
+        
+        return $this->db->Insert("{$this->table}", $this->validator->clean);
+        
     }
 
     /**
@@ -119,16 +120,12 @@ abstract class BaseModel
     {
         $this->validator->run($params);
         
-       
         $id = $params[$this->id_name];
-        unset($params[$this->id_name]);
-        
+              
         if (!empty($this->validator->errors)) {
-            throw new ValidatorException(implode(' ', $this->validator->errors));
-        } else {
-            
-            return $this->db->Update("$this->table", $this->validator->clean, "{$this->id_name} = :id", ['id' => $id]);
-        }    
+            throw new ValidatorException($this->validator->errors);
+        } 
+        
+        return $this->db->Update("$this->table", $this->validator->clean, "{$this->id_name} = :id", ['id' => $id]);
     }
-
 }

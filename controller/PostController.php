@@ -15,13 +15,14 @@ use controller\BaseController,
     core\DBDriver,
     core\Validator,
     core\Request,
-    core\exception\ValidatorException;
+    core\exception\ValidatorException,
+    core\exception\PageNotFoundException;
 
 class PostController extends BaseController
 {
 
-    private $mArticles;
-
+    public $mArticles;
+    
     public function __construct(Request $request)
     {
         parent::__construct($request);
@@ -55,7 +56,7 @@ class PostController extends BaseController
             $this->title = $article['title'];
             $this->aside = '';
         } else {
-            $this->er404Action('Ooooops... Something went wrong!');
+            throw new PageNotFoundException ();
         }
     }
 
@@ -85,81 +86,70 @@ class PostController extends BaseController
 
     public function addAction()
     {
+        if (!$this->login) {
+                header("Location: " . BASE_PATH . "login");
+                exit();
+        }
+                        
         if ($this->request->isPost()) {
-            $name = $this->request->post['title'];
-            $text = $this->request->post['content'];
+            $name = $this->request->post['title'] ?? null;
+            $text = $this->request->post['content'] ?? null;
                 try {
-                    $this->mArticles->add(['title' => $name, 'text' => $text]);
+                    $this->mArticles->add(['title' => $name, 'text' => $text, 'fields' => ['title', 'text']]);
                     header("Location:" . BASE_PATH . "posts?success=add");
                     exit();
                 } catch (ValidatorException $e) {
-                    $msg = $e->getMessage();
-                                   
+                    $msgs = $e->getErrors();
                 }
-//            }
-        } else {
-            /* зашли на страницу методом GET */
-            if (!$this->login) {
-                header("Location: " . BASE_PATH . "login");
-                exit();
-            }
-            $name = '';
-            $text = '';
-            $msg = '';
-        }
-
+        } 
+        
         $this->content = $this->template('view_add', [
-            'name' => $name,
-            'text' => $text,
-            'back' => $this->request->server['HTTP_REFERER'],
-            'msg' => $msg
+            'name' => $this->request->post['title'] ?? '',
+            'text' => $this->request->post['content'] ?? '',
+            'back' => $this->request->server['HTTP_REFERER'] ?? BASE_PATH,
+            'msgs' => $msgs ?? []
         ]);
 
         $this->title = 'Добавить статью';
     }
 
     /* страница редактрирование статьи /edit/id */
-
     public function editAction()
     {
+        if (!$this->login) {
+            header("Location: " . BASE_PATH . "login");
+            exit();
+        }
+        
         $id = $this->request->get['id'];
+              
+        $article = $this->mArticles->getOne($id);
+                
         /* проверка отправки формы методом POST */
         if ($this->request->isPost()) {
-            $msg = '';
-            $name = $this->request->post['title'];
-            $text = $this->request->post['content'];
+            $name = $this->request->post['title'] ?? null;
+            $text = $this->request->post['content'] ?? null;
             
                 try {    
-                    $this->mArticles->edit(['id_article' => $id, 'title' => $name, 'text' => $text]);
+                    $this->mArticles->edit(['id_article' => $id, 'title' => $name, 'text' => $text, 'fields' => ['id_article', 'title', 'text']]);
                     header("Location:" . BASE_PATH . "posts?success=edit");
                     exit();
                 } catch (ValidatorException $e) {
-                    $msg = $e->getMessage();
-                                   
+                    $msgs = $e->getErrors();
                 }
-          
+        } 
+        
+        if (!$article){
+            throw new PageNotFoundException ();
         } else {
-            /* зашли на страницу методом GET */
-            if (!$this->login) {
-                header("Location: " . BASE_PATH . "login");
-                exit();
-            }
-            $msg = '';
-            $article = $this->mArticles->getOne($id);
-        }
-
-        if ($article = $this->mArticles->getOne($id)) {
-            $name = $article['title'];
-            $text = $article['text'];
+        
             $this->content = $this->template('view_edit', [
-                'name' => $name,
-                'text' => $text,
-                'back' => $this->request->server['HTTP_REFERER'],
-                'msg' => $msg,
+                    'name' => $this->request->post['title'] ?? $article['title'],
+                    'text' => $this->request->post['content'] ?? $article['text'],
+                    'back' => $this->request->server['HTTP_REFERER'] ?? BASE_PATH,
+                    'msgs' => $msgs ?? []
             ]);
             $this->title = 'Изменить статью';
-        } else {
-            $this->er404Action('Ooooops... Something went wrong!');
         }
     }
 
@@ -177,7 +167,7 @@ class PostController extends BaseController
             header("Location: " . BASE_PATH . "posts?success=delete");
             exit();
         } else {
-            $this->er404Action('Ooooops... Something went wrong!');
+            throw new PageNotFoundException ();
         }
     }
 

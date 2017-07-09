@@ -22,7 +22,8 @@ class PostModel extends BaseModel
 			
 			'id_article' => [
 				'type' => 'integer',
-				'require' => false
+				'require' => false,
+                                
 			],
 
 			'title' => [
@@ -46,5 +47,6 @@ class PostModel extends BaseModel
   			]
 
 		]);
+        
     }
 }

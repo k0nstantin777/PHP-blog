@@ -28,15 +28,10 @@ class DBDriver implements DBDriverInterface
      */
     public function Query($sql, array $params = [])
     {
-        try {
-            $q = $this->pdo->prepare($sql);
-            $q->execute($params);
-            $query = $q->fetchAll();
-        } catch (\PDOException $e){
-            die (Core::errSendtoScr($e));
-        }
-                    
-        return $query;
+        $q = $this->pdo->prepare($sql);
+        $q->execute($params);
+        return $q->fetchAll();
+  
     }
 
     /**
@@ -66,13 +61,9 @@ class DBDriver implements DBDriverInterface
 
         $query = "INSERT INTO $table ($columns_s) VALUES ($masks_s)";
 
-        try {
-            $q = $this->pdo->prepare($query);
-            $q->execute($obj);
-        } catch (\PDOException $e){
-            die (Core::errSendtoScr($e));
-        }
-
+        $q = $this->pdo->prepare($query);
+        $q->execute($obj);
+        
         return $this->pdo->lastInsertId();
     }
 
@@ -100,14 +91,10 @@ class DBDriver implements DBDriverInterface
 
         $sets_s = implode(', ', $sets);
         $query = "UPDATE $table SET $sets_s WHERE $where";
-         
-        try {
+       
             $q = $this->pdo->prepare($query);
             $q->execute(array_merge($obj,$params));
-        } catch (\PDOException $e){
-            die (Core::errSendtoScr($e));
-        }
-
+       
         return $q->rowCount();
     }
 
@@ -123,13 +110,9 @@ class DBDriver implements DBDriverInterface
     {
         $query = "DELETE FROM $table WHERE $where";
         
-        try {
-            $q = $this->pdo->prepare($query);
-            $q->execute($params);
-        } catch (\PDOException $e){
-            die (Core::errSendtoScr($e));
-        }
-
+        $q = $this->pdo->prepare($query);
+        $q->execute($params);
+       
         return $q->rowCount();
     }
         
