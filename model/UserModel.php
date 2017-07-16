@@ -19,7 +19,7 @@ class UserModel extends BaseModel
     {
         parent::__construct($db, $validator);
         $this->table = 'users';
-        $this->id_name = 'login';
+        $this->id_name = 'id_user';
         $this->validator->setSchema([
 			
 			'id_user' => [
@@ -29,14 +29,14 @@ class UserModel extends BaseModel
 
 			'login' => [
 				'type' => 'string',
-				'length' => 20,
+				'length' => [5, 20],
 				'require' => true,
                                 'name' => 'Логин'
 			],
 
 			'password' => [
 				'type' => 'string',
-				'length' => 255,
+				'length' => [4, 20],
 				'require' => true, 
                                 'name' => 'Пароль'
 			],
@@ -46,7 +46,20 @@ class UserModel extends BaseModel
 				'length' => 20,
 				'require' => false
   			]
-
-		]);
+        
+                ]);
+        
+    }
+    
+    public function getByLogin($login)
+    {
+        $user = $this->db->Query("SELECT * FROM {$this->table} WHERE login = :login", ['login' => $login]);
+        
+        return !empty($user) ? $user[0] : false;                
+    } 
+    
+    public function addUser($params)
+    {
+        return $this->db->Insert("{$this->table}", $params);                
     }
 }

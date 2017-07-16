@@ -128,6 +128,7 @@ class Application
                 $controller = 'Post';
                 break;
             case 'login':
+            case 'unlogin':    
             case 'reg':
                 $controller = 'User';
                 break;
@@ -151,11 +152,11 @@ class Application
      */
     private function getAction(array $uri)
     {
-        return sprintf('%sAction', $uri[0] ?? DEFAULT_ACTION);
+        return sprintf('%sAction', $uri[0] ?? 'index');
     }
 
     /**
-     * Преобразование строку запроса клиента в массив
+     * Преобразование строки запроса клиента в массив
      * 
      * @return array
      */

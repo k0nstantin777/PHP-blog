@@ -23,19 +23,18 @@ class PostModel extends BaseModel
 			'id_article' => [
 				'type' => 'integer',
 				'require' => false,
-                                
 			],
 
 			'title' => [
 				'type' => 'string',
-				'length' => 32,
+				'length' => [8, 60],
 				'require' => true,
                                 'name' => 'Имя статьи'
 			],
 
 			'text' => [
 				'type' => 'string',
-				'length' => 'big',
+				'length' => 2000,
 				'require' => true,
                                 'name' => 'Текст статьи'
 			],

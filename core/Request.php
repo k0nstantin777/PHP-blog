@@ -74,15 +74,4 @@ class Request
         return $this->server['REQUEST_METHOD'] === self::METHOD_GET;
     }
         
-    /**
-     * Получениа параметра из глобального массива
-     * @param string $param
-     * 
-     * @return string
-     */
-    public function getParam($param)
-    {
-        return isset($param) ? trim(htmlspecialchars($param)) : '';
-    }  
-    
 }

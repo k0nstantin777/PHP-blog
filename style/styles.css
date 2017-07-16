@@ -10,7 +10,7 @@ a{text-decoration:none; outline:none;}
 a:hover {color: #6699ff; transition: 0.4s ease-in-out }
 a img{border:none; outline:none;}
 ul{list-style:none; position: relative}
-p{margin:0 0 14px}
+p{margin:0 0 10px}
 .p {margin: 10px 0 0 0}
 input {border-radius: 4px}
 textarea {border-radius: 4px}
@@ -98,7 +98,9 @@ article a.add:hover {background-color: #000066; transition: 0.6s ease-in-out }
 #form label {font-size: 17px;}
 #submit {padding: 5px}
 #submit:hover {background-color: #6699ff}
-#error {font-size: 16px; color: red;}
+#error {font-size: 10px; color: red;}
+#form .error {border: 1px solid red}
+
 
 .left {background-color: #e8eef2; border-radius: 5px; padding: 10px; height: auto}
 .left li {font-size: 10px; margin: 5px 0}

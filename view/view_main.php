@@ -21,11 +21,11 @@
 					
                                         <div class="current_user"><span>User <span class="fa fa-user fa-fw"></span></span> : <i> <?=$user?></i></div>
                                         <div id="user_menu">
-                                            <div class="user_menu"><a href="<?=BASE_PATH?>login">
+                                            <div class="user_menu">
                                             <?php if ($login === true):?>
-                                                    Выйти</a> 
+                                                <a href="<?=BASE_PATH?>unlogin">Выйти</a> 
                                             <?php else: ?>
-                                                Вход </a><span>|</span><a href="<?=BASE_PATH?>reg"> Регистрация</a>  
+                                                <a href="<?=BASE_PATH?>login">Вход </a><span>|</span><a href="<?=BASE_PATH?>reg"> Регистрация</a>  
                                             <?php endif;?> 
                                             </div>
                                         </div>     

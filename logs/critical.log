@@ -98,3 +98,213 @@ Text: SQLSTATE[HY000] [1049] Unknown database 'id1764497_blog1'
 #4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
 #5 {main}
 *****************
+
+Date: 2017-07-13 21:50:25
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/core/User.php(89): model\BaseModel->add(Array)
+#1 /home/bumer/www/php1.loc/blog/controller/UserController.php(61): core\User->login(Array, Array, Array)
+#2 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\UserController->loginAction()
+#3 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#4 {main}
+*****************
+
+Date: 2017-07-13 21:52:50
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/core/User.php(89): model\BaseModel->add(Array)
+#1 /home/bumer/www/php1.loc/blog/controller/UserController.php(61): core\User->login(Array, Array, Array)
+#2 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\UserController->loginAction()
+#3 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#4 {main}
+*****************
+
+Date: 2017-07-13 21:55:12
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/core/User.php(89): model\BaseModel->add(Array)
+#1 /home/bumer/www/php1.loc/blog/controller/UserController.php(61): core\User->login(Array, Array, Array)
+#2 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\UserController->loginAction()
+#3 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#4 {main}
+*****************
+
+Date: 2017-07-13 21:56:46
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/core/User.php(89): model\BaseModel->add(Array)
+#1 /home/bumer/www/php1.loc/blog/controller/UserController.php(61): core\User->login(Array, Array, Array)
+#2 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\UserController->loginAction()
+#3 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#4 {main}
+*****************
+
+Date: 2017-07-13 21:57:47
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/core/User.php(89): model\BaseModel->add(Array)
+#1 /home/bumer/www/php1.loc/blog/controller/UserController.php(61): core\User->login(Array, Array, Array)
+#2 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\UserController->loginAction()
+#3 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#4 {main}
+*****************
+
+Date: 2017-07-14 19:36:57
+Level: ERROR
+Text: SQLSTATE[HY000]: General error: 1364 Field 'created_at' doesn't have a default value
+#0 /home/bumer/www/php1.loc/blog/core/DBDriver.php(65): PDOStatement->execute(Array)
+#1 /home/bumer/www/php1.loc/blog/model/BaseModel.php(116): core\DBDriver->Insert('session', Array)
+#2 /home/bumer/www/php1.loc/blog/core/User.php(92): model\BaseModel->add(Array)
+#3 /home/bumer/www/php1.loc/blog/controller/UserController.php(61): core\User->login(Array, Array, Array)
+#4 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\UserController->loginAction()
+#5 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#6 {main}
+*****************
+
+Date: 2017-07-14 20:43:32
+Level: ERROR
+Text: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'remember' in 'field list'
+#0 /home/bumer/www/php1.loc/blog/core/DBDriver.php(65): PDOStatement->execute(Array)
+#1 /home/bumer/www/php1.loc/blog/model/UserModel.php(64): core\DBDriver->Insert('users', Array)
+#2 /home/bumer/www/php1.loc/blog/core/User.php(57): model\UserModel->addUser(Array)
+#3 /home/bumer/www/php1.loc/blog/controller/UserController.php(124): core\User->registration(Array)
+#4 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\UserController->regAction()
+#5 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#6 {main}
+*****************
+
+Date: 2017-07-16 11:41:50
+Level: ERROR
+Text: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELECT id FROM users WHERE login = '')' at line 1
+#0 /home/bumer/www/php1.loc/blog/core/DBDriver.php(32): PDOStatement->execute(Array)
+#1 /home/bumer/www/php1.loc/blog/model/SessionModel.php(79): core\DBDriver->Query('SELECT id FROM ...', Array)
+#2 /home/bumer/www/php1.loc/blog/core/User.php(165): model\SessionModel->getIdSessionByLogin('')
+#3 /home/bumer/www/php1.loc/blog/controller/UserController.php(71): core\User->unLogin(Array, Array)
+#4 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\UserController->loginAction()
+#5 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#6 {main}
+*****************
+
+Date: 2017-07-16 18:45:16
+Level: ERROR
+Text: SQLSTATE[HY000]: General error: 1364 Field 'user_id' doesn't have a default value
+#0 /home/bumer/www/php1.loc/blog/core/DBDriver.php(65): PDOStatement->execute(Array)
+#1 /home/bumer/www/php1.loc/blog/model/BaseModel.php(116): core\DBDriver->Insert('session', Array)
+#2 /home/bumer/www/php1.loc/blog/core/User.php(91): model\BaseModel->add(Array)
+#3 /home/bumer/www/php1.loc/blog/controller/UserController.php(62): core\User->login(Array, Array, Array)
+#4 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\UserController->loginAction()
+#5 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#6 {main}
+*****************
+
+Date: 2017-07-16 19:00:31
+Level: ERROR
+Text: Не пытайтесь подделать форму!
+#0 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\PostController->addAction()
+#1 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#2 {main}
+*****************
+
+Date: 2017-07-16 19:08:26
+Level: ERROR
+Text: Не пытайтесь подделать форму!
+#0 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\PostController->addAction()
+#1 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#2 {main}
+*****************
+
+Date: 2017-07-16 19:13:16
+Level: ERROR
+Text: Не пытайтесь подделать форму!
+#0 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\PostController->addAction()
+#1 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#2 {main}
+*****************
+
+Date: 2017-07-16 19:14:37
+Level: ERROR
+Text: Не пытайтесь подделать форму!
+#0 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\PostController->addAction()
+#1 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#2 {main}
+*****************
+
+Date: 2017-07-16 19:15:10
+Level: ERROR
+Text: Не пытайтесь подделать форму!
+#0 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\PostController->addAction()
+#1 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#2 {main}
+*****************
+
+Date: 2017-07-16 19:15:13
+Level: ERROR
+Text: Не пытайтесь подделать форму!
+#0 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\PostController->addAction()
+#1 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#2 {main}
+*****************
+
+Date: 2017-07-16 19:15:28
+Level: ERROR
+Text: Не пытайтесь подделать форму!
+#0 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\PostController->addAction()
+#1 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#2 {main}
+*****************
+
+Date: 2017-07-16 19:18:47
+Level: ERROR
+Text: Не пытайтесь подделать форму!
+#0 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\PostController->addAction()
+#1 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#2 {main}
+*****************
+
+Date: 2017-07-16 19:22:36
+Level: ERROR
+Text: Не пытайтесь подделать форму!
+#0 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\PostController->addAction()
+#1 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#2 {main}
+*****************
+
+Date: 2017-07-16 19:23:23
+Level: ERROR
+Text: Не пытайтесь подделать форму!
+#0 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\PostController->addAction()
+#1 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#2 {main}
+*****************
+
+Date: 2017-07-16 19:25:15
+Level: ERROR
+Text: Не пытайтесь подделать форму!
+#0 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\PostController->addAction()
+#1 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#2 {main}
+*****************
+
+Date: 2017-07-16 19:27:23
+Level: ERROR
+Text: Не пытайтесь подделать форму!
+#0 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\PostController->addAction()
+#1 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#2 {main}
+*****************
+
+Date: 2017-07-16 19:27:25
+Level: ERROR
+Text: Не пытайтесь подделать форму!
+#0 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\PostController->addAction()
+#1 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#2 {main}
+*****************
+
+Date: 2017-07-16 19:27:43
+Level: ERROR
+Text: Не пытайтесь подделать форму!
+#0 /home/bumer/www/php1.loc/blog/core/Application.php(60): controller\PostController->addAction()
+#1 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#2 {main}
+*****************

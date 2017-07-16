@@ -31,12 +31,7 @@ class Core {
         }
         return true;
     }
-    
-    /*шифрование*/
-     public static function myCrypt($str){
-        return hash('sha256', $str . SAULT);
-    }
-    
+            
     /* проверка на корректность ввода*/
      public static function checkName($name, $type){
         /* для проверки названия статьи: латиница, русские буквы, цифры, пробелы и дефис */
@@ -64,6 +59,11 @@ class Core {
     {
         setcookie($name, '', time() - 1);
         unset($_COOKIE[$name]); 
+    }
+    
+    public static function myCrypt($str)
+    {
+        return hash('sha256', $str . SAULT);
     }
     
 }

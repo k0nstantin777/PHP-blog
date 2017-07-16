@@ -10,12 +10,13 @@ namespace controller;
 
 use controller\BaseController,
     model\PostModel,
-    core\Core,
     core\DB,
     core\DBDriver,
     core\Validator,
     core\Request,
+    core\ArrayHelper,
     core\exception\ValidatorException,
+    core\exception\PostException,
     core\exception\PageNotFoundException;
 
 class PostController extends BaseController
@@ -33,13 +34,15 @@ class PostController extends BaseController
         ]);
     }
 
-    /* главная страница */
-
+    /**
+     *  главная страница 
+     */
     public function indexAction()
     {
         $this->title = 'Мой блог';
         $this->aside = $this->template('view_anons', ['articles' => $this->mArticles->getRandLimit(7)]);
-        $this->content = $this->template('view_index');
+        $this->content = $this->template('view_index', ['login' => $this->login,
+                                                        'user' => $this->user]);
     }
 
     /* страница вывода одной статьи /post */
@@ -47,21 +50,22 @@ class PostController extends BaseController
     public function postAction()
     {
         $id = $this->request->get['id'];
-        if ($article = $this->mArticles->getOne($id)) {
-            $this->content = $this->template('view_post', [
+        $article = $this->mArticles->getOne($id);
+        if (!$article){
+            throw new PageNotFoundException ();
+        }     
+        $this->content = $this->template('view_post', [
                 'login' => $this->login,
                 'article' => $article,
-                'back' => $this->request->getParam($this->request->server['HTTP_REFERER']),
-            ]);
-            $this->title = $article['title'];
-            $this->aside = '';
-        } else {
-            throw new PageNotFoundException ();
-        }
+                'back' => $this->request->server['HTTP_REFERER'],
+        ]);
+        $this->title = $article['title'];
+        $this->aside = '';
     }
 
-    /* страница вывода всех статей /posts */
-
+    /**
+     *  страница вывода всех статей /posts 
+     */
     public function postsAction()
     {
         /* вывод сообщения после выполнения действия */
@@ -82,32 +86,46 @@ class PostController extends BaseController
         $this->title = 'Статьи';
     }
 
-    /* страница добавление статьи /add */
-
+    /**
+     *  страница добавление статьи /add 
+     */
     public function addAction()
     {
         if (!$this->login) {
-                header("Location: " . BASE_PATH . "login");
-                exit();
+            header("Location: " . BASE_PATH . "login");
+            exit();
         }
-                        
+        $errors = [];
+        $msg = '';
+        
+        //устанавливаем схему ожидаемых полей из формы
+        $this->mArticles->setSchema(['title', 'content']);
+                
         if ($this->request->isPost()) {
-            $name = $this->request->post['title'] ?? null;
-            $text = $this->request->post['content'] ?? null;
+            $fields = ArrayHelper::extract($this->request->post, $this->mArticles->getSchema());
+                        
                 try {
-                    $this->mArticles->add(['title' => $name, 'text' => $text, 'fields' => ['title', 'text']]);
+                    if (in_array(null, $fields, true)){
+                        throw new PostException('Не пытайтесь подделать форму!');
+                    } 
+                    $name = $fields['title'];
+                    $text = $fields['content'];
+                    $this->mArticles->add(['title' => $name, 'text' => $text]);
                     header("Location:" . BASE_PATH . "posts?success=add");
                     exit();
                 } catch (ValidatorException $e) {
-                    $msgs = $e->getErrors();
-                }
+                    $errors = $e->getErrors();
+                } catch (PostException $e) {
+                    $msg = $e->getMessage();
+                } 
         } 
         
         $this->content = $this->template('view_add', [
-            'name' => $this->request->post['title'] ?? '',
-            'text' => $this->request->post['content'] ?? '',
-            'back' => $this->request->server['HTTP_REFERER'] ?? BASE_PATH,
-            'msgs' => $msgs ?? []
+            'name' => ArrayHelper::get($this->request->post, 'title'),
+            'text' => ArrayHelper::get($this->request->post, 'content'),
+            'back' => ArrayHelper::get($this->request->server, 'HTTP_REFERER', BASE_PATH),
+            'errors' => $errors,
+            'msg' => $msg
         ]);
 
         $this->title = 'Добавить статью';
@@ -122,53 +140,68 @@ class PostController extends BaseController
         }
         
         $id = $this->request->get['id'];
-              
+               
         $article = $this->mArticles->getOne($id);
+        if (!$article){
+            throw new PageNotFoundException ();
+        } 
+        
+        $errors = [];
+        $msg = '';
+        $this->mArticles->setSchema(['title', 'content', 'id']);
                 
         /* проверка отправки формы методом POST */
         if ($this->request->isPost()) {
-            $name = $this->request->post['title'] ?? null;
-            $text = $this->request->post['content'] ?? null;
-            
+            $fields = ArrayHelper::extract($this->request->post, $this->mArticles->getSchema());
+                
                 try {    
-                    $this->mArticles->edit(['id_article' => $id, 'title' => $name, 'text' => $text, 'fields' => ['id_article', 'title', 'text']]);
+                    if (in_array(null, $fields, true)){
+                        throw new PostException('Не пытайтесь подделать форму!');
+                    } 
+                    $name = $fields['title'];
+                    $text = $fields['content'];
+                    $this->mArticles->edit(['id_article' => $id, 'title' => $name, 'text' => $text]);
                     header("Location:" . BASE_PATH . "posts?success=edit");
                     exit();
                 } catch (ValidatorException $e) {
-                    $msgs = $e->getErrors();
-                }
+                    $errors = $e->getErrors();
+                } catch (PostException $e) {
+                    $msg = $e->getMessage();
+                } 
         } 
+
+        $this->content = $this->template('view_edit', [
+                'name' => ArrayHelper::get($this->request->post, 'title', $article['title']),
+                'text' => ArrayHelper::get($this->request->post, 'content', $article['text']),
+                'back' => ArrayHelper::get($this->request->server, 'HTTP_REFERER', BASE_PATH),
+                'errors'=> $errors,
+                'msg' => $msg,
+                'id' => $id
+                
+        ]);
+        $this->title = 'Изменить статью';
         
-        if (!$article){
-            throw new PageNotFoundException ();
-        } else {
-        
-            $this->content = $this->template('view_edit', [
-                    'name' => $this->request->post['title'] ?? $article['title'],
-                    'text' => $this->request->post['content'] ?? $article['text'],
-                    'back' => $this->request->server['HTTP_REFERER'] ?? BASE_PATH,
-                    'msgs' => $msgs ?? []
-            ]);
-            $this->title = 'Изменить статью';
-        }
     }
 
-    /* удаление статьи /delete/id */
+    /**
+     * удаление статьи /delete/id 
+     */
 
     public function deleteAction()
     {
-        $id = $this->request->get['id'];
         if (!$this->login) {
             header("Location: " . BASE_PATH . "login");
             exit();
         }
+        
+        $id = $this->request->get['id'];
+       
         //удалеяем статью
-        if ($this->mArticles->delete($id)) {
-            header("Location: " . BASE_PATH . "posts?success=delete");
-            exit();
-        } else {
+        if (!$this->mArticles->delete($id)) {
             throw new PageNotFoundException ();
         }
+        header("Location: " . BASE_PATH . "posts?success=delete");
+        exit();
     }
 
 }

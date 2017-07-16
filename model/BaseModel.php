@@ -30,13 +30,19 @@ abstract class BaseModel
      * Имя столбца уникального идентификатора в БД;
      * @var string
      */
-    protected $id_name;
+    public $id_name;
 
     /**
      * экземпляр класса validator
      * @var ValidatorInterface 
      */
     public $validator;
+    
+    /**
+     * схема полей данных формы
+     * @var array 
+     */
+    protected $schema;
    
     public function __construct(DBDriverInterface $db, ValidatorInterface $validator)
     {
@@ -100,6 +106,7 @@ abstract class BaseModel
      */
     public function add(array $params)
     {
+                
         $this->validator->run($params);
         
         if (!empty($this->validator->errors)) {
@@ -127,5 +134,15 @@ abstract class BaseModel
         } 
         
         return $this->db->Update("$this->table", $this->validator->clean, "{$this->id_name} = :id", ['id' => $id]);
+    }
+    
+    public function setSchema($schema)
+    {
+        return $this->schema = $schema;
+    }
+    
+    public function getSchema ()
+    {
+        return $this->schema;
     }
 }

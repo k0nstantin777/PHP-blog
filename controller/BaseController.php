@@ -8,8 +8,9 @@
 
 namespace controller;
 
-use core\Core,
+use core\User,
     core\Request,
+    core\ArrayHelper,
     core\exception\PageNotFoundException;
 
 class BaseController
@@ -30,15 +31,15 @@ class BaseController
         $this->menu = $this->template('view_menu', [
             'login' => $this->login
         ]);
-
-        if (!Core::isAuth()) {
+                       
+        $this->request = $request;
+        if (!User::auth($this->request->session, $this->request->cookie)) {
             $this->login = false;
         } else {
             $this->login = true;
-            $this->user = $_SESSION['login'];
+            $this->user = ArrayHelper::get($_SESSION, 'login');
         }
-
-        $this->request = $request;
+    
     }
 
     public function __call($name, $args)
@@ -50,6 +51,7 @@ class BaseController
 
     public function response()
     {
+        
         echo $html = $this->template('view_main', [
             'title' => $this->title,
             'content' => $this->content,

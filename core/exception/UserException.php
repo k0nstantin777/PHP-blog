@@ -3,15 +3,15 @@
 namespace core\exception;
 
 /**
- * ValidatorException
+ * Исключения UserException
  *
  * @author Noskov Konstantin <noskov.kos@gmail.com>
  */
-class ValidatorException extends BaseException
+class UserException extends BaseException
 {
     private $errors;
     
-    public function __construct($errors =[], $message = 'Error', $code = 403, \Exception $previus = null)
+    public function __construct(array $errors =[], $message = '', $code = 403, \Exception $previus = null)
     {
         parent::__construct($message, $code, $previus);
         $this->errors = $errors;
