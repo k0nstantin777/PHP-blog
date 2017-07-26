@@ -19,10 +19,13 @@ class User
     
     private $mSession;
     
-    public function __construct(UserModel $mUser, SessionModel $mSession)
+    private $request;
+    
+    public function __construct(Request $request)
     {
-        $this->mUser = $mUser;
-        $this->mSession = $mSession;
+        $this->mUser = new UserModel(new DBDriver(DB::get()), new Validator());
+        $this->mSession = new SessionModel(new DBDriver(DB::get()), new Validator());
+        $this->request = $request;
     }
 
     /**
@@ -31,29 +34,23 @@ class User
      * @return void
      * @throws UserException catched in UserController
      */
-    public function registration(array $fields)
+    public function registration()
     {
-        if (in_array(null, ArrayHelper::extract($fields, $this->mUser->getSchema()), true)){
+        $hash_form = md5('login'.'password'.'submit');
+        if ($hash_form !== md5(implode(array_keys($this->request->post)))){
             throw new UserException([], 'Не пытайтесь подделать форму!');
         }
         
-        $user = $this->mUser->getByLogin($fields['login']);
-        if (!empty($user)) {
-            throw new UserException([], sprintf('Пользователь с логином %s уже существует!', $fields['login']));
+        $user = $this->mUser->getByLogin($this->request->post['login']);
+        if (!empty($user) || $this->request->post['login'] === 'Гость') {
+            throw new UserException([], sprintf('Пользователь с логином %s уже существует!', $this->request->post['login']));
         }
 
-        //валидация применена в данном месте, для валидирования поле пароля в незашифрованном виде
-        $this->mUser->validator->run($fields);
-                
-        if (!empty($this->mUser->validator->errors)) {
-            throw new UserException($this->mUser->validator->errors);
-        } 
-        
-        //после валидации пароль шифруем для дальнейшего добавления в БД
-        $fields['password'] = $this->myCrypt($this->mUser->validator->clean['password']);
+        $uncryptPass = $this->request->post['password'];
+        $password = $this->myCrypt($this->request->post['password']);
 
         try {
-            return $this->mUser->addUser($fields);
+            return $this->mUser->add(['login' => $this->request->post['login'], 'password' => $password, 'uncryptPass' => $uncryptPass]);
         } catch (ValidatorException $e) {
             throw new UserException($e->getErrors(), $e->getMessage(), $e->getCode(), $e);
         }
@@ -61,100 +58,116 @@ class User
     
     /**
      * Авторизация
-     * @param array $fields данные из формы
      */
-    public function login (array $fields)
+    public function login ()
     {
-        //проверка целостности формы
-        if (in_array(null, ArrayHelper::extract($fields, $this->mUser->getSchema()), true)){
-            throw new UserException([], 'Не пытайтесь подделать форму!');
-        }
-        
-        //валидация полей формы
-        $this->mUser->validator->run($fields);
-                
-        if (!empty($this->mUser->validator->errors)) {
-            throw new UserException($this->mUser->validator->errors);
+        //валидация формы
+        try { 
+            $this->mUser->getValidFields($this->request->post);
+        } catch (ValidatorException $e) {
+            throw new UserException($e->getErrors(), $e->getMessage(), $e->getCode(), $e);
         }
         
         //проверка наличия пользователя
-        $userLogin = $this->mUser->getByLogin($fields['login']);
+        $userLogin = $this->mUser->getByLogin($this->request->post['login']);
         if (empty($userLogin)) {
-            throw new UserException([], sprintf('Пользователя с логином %s не существует!', $fields['login']));
+            throw new UserException([], sprintf('Пользователя с логином %s не существует!', $this->request->post['login']));
         }
         
         //проверка правильности введенного пароля
-        if($fields['login'] == $userLogin['login'] && $this->myCrypt($fields['password']) == $userLogin['password']) {
-            
-            $this->mSession->add(['sid' => session_id(), 'user_id' => $userLogin[$this->mUser->id_name]]);
-
-            //устанавливаем параметры сессии
-            $this->mSession->setSessionParam('auth', true);
-            $this->mSession->setSessionParam('login', $userLogin['login']);
-
-            //устанавливаем cookie, если получен флаг remember
-            if($fields['remember']){
-                setcookie('login', $userLogin['login'], time() + 3600 * 24 * 365);
-                setcookie('password', $userLogin['password'], time() + 3600 * 24 * 365);
-            }
-      
-        } else {
+        if($this->myCrypt($this->request->post['password']) !== $userLogin['password']) {
             throw new UserException([], sprintf('Неправильный пароль!'));
-        }   
-    
+        }    
+        
+        //устанавливаем параметры сессии
+        $this->setSession($userLogin);
+
+        //устанавливаем cookie, если получен флаг remember
+        if($this->request->post['remember']){
+            $this->request->cookie->set('login', $userLogin['login'], '1 years');
+            $this->request->cookie->set('password', $userLogin['password'], '1 years');
+        }
+ 
     }
     
     /**
      * Определение авторизации пользователя
-     * @param array $session 
-     * @param array $cookie
-     * @return boolean
+     * @return bool
      */    
-    public static function auth (array $session = [], array $cookie = [])
+    public function isAuth ()
     {
-        $mSession = new SessionModel(new DBDriver(DB::get()), new Validator());
         
-        //поиск записи текущей сессии в БД
-        $user_session = $mSession->getSessionBySid(session_id());
+        $cookieLogin = $this->request->cookie->get('login');
+        $cookiePass = $this->request->cookie->get('password');
+        $sid = $this->request->session->get('sid');
+        $userLogin = $this->mUser->getByLogin($cookieLogin);
         
-        //поиск и удаление устаревших сессий (старше 30 минут) по user_id 
-        $mSession->delOldSession($user_session['user_id']);
-        
-        //если нет $_SESSION['auth'] или нет записи текущей сессии в БД, пробуем получить cookie
-        if(empty(ArrayHelper::get($session, 'auth')) || empty($user_session)){
-            $login = ArrayHelper::get($cookie, 'login');
-            $pass = ArrayHelper::get($cookie, 'password');
-            $mUser = new UserModel(new DBDriver(DB::get()), new Validator());
-            //определям есть ли cookie 
-            if ($user = $mUser->getByLogin($login)){
-                //проверяем корректность cookie
-                if($login === $user['login'] && $pass === $user['password']){
-                    //устанавливаем параметры сессии
-                    $mSession->setSessionParam('auth', true);
-                    $mSession->setSessionParam('login', $user['login']);
-                    
-                    //добавляем сессию в БД
-                    $mSession->add(['sid' => session_id(), 'user_id' => $user[$mUser->id_name]]);
-                                        
-                    return true;
-                }
-                return false;
-            }
+                
+        if(!$sid && !$userLogin){
             return false;
         }
-        //если есть сессия в БД и есть $_SESSION['auth'] обновляем сессию 
-        $mSession->edit(['id' => $user_session[$mSession->id_name], 'updated_at' => date("Y-m-d H:i:s", time())]);
-        return true;
+        
+        if ($sid){
+            $session = $this->mSession->getBySid($sid);
+            $this->mSession->edit(['id' => $session[$this->mSession->id_name], 'updated_at' => date("Y-m-d H:i:s", time())]);
+            return true;
+        }
+        
+        if ($userLogin && $userLogin['password'] === $cookiePass) {
+            $this->setSession($userLogin);
+            return true;
+        }
+           
     }
     
+    /**
+     * Проверка привилегий пользователя
+     * @param string $prive_name
+     * @return string
+     */
+    public function can($prive_name)
+    {
+        $login = $this->request->session->get('login');
+        return $this->mUser->getPrive($login, $prive_name);
+    }
+    
+    /**
+     * Установка параметров сессии текущего юзера и удаление устаревших сессий (старше 30 минут)
+     * @param array $userLogin строка из таблицы БД users в виде массива
+     * @return void
+     */
+    public function setSession(array $userLogin)
+    {
+        //получаем токен
+        $sid = $this->getToken();
+        
+        //поиск и удаление устаревших сессий (старше 30 минут) по user_id 
+        $this->mSession->delOld($userLogin[$this->mUser->id_name]);
+        
+        //устанавливаем параметры сессии
+        $this->request->session->set('sid', $sid);
+        $this->request->session->set('login', ArrayHelper::get($userLogin, 'login'));
+        $this->request->session->set('prives', $this->mUser->getPrives(ArrayHelper::get($userLogin, 'login')));
+        $this->mSession->add(['sid' => $sid, 'user_id' => $userLogin[$this->mUser->id_name]]);
+ 
+    }
+
+
     /**
      * Деавторизация
      * @param string $login текущий пользователь
      */
-    public function unLogin ($login)
+    public function unLogin ()
     {
-        $id = $this->mSession->getIdSessionByLogin($login);
-        $this->mSession->delete($id);
+        //удаляем запись из таблицы session текущего пользователя
+        $session = $this->mSession->getBySid($this->request->session->get('sid'));
+        $this->mSession->delete($session[$this->mSession->id_name]);
+        //удаляем записи cookie и session
+        $this->request->session->delete('sid');
+        $this->request->session->delete('login');
+        $this->request->session->delete('prives');
+        $this->request->cookie->delete('login');
+        $this->request->cookie->delete('password');
     }
     
     /**
@@ -165,6 +178,23 @@ class User
     private function myCrypt($str)
     {
         return hash('sha256', $str . SAULT);
+    }
+    
+    /**
+     * Генерация уникального токена
+     * @return string
+     */    
+    private function getToken()
+    {
+        $pattern = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890';
+        $token = '';
+
+        for ($i = 0; $i < 16; $i++) {
+                $symbol = mt_rand(0, strlen($pattern) - 1);
+                $token .= $pattern[$symbol];
+        }
+
+        return $token;
     }
         
 }

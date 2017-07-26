@@ -19,26 +19,34 @@ class BaseController
     protected $title;
     protected $content;
     protected $aside;
-    protected $user = 'Гость';
+    protected $user;
     protected $login;
     protected $menu;
     protected $request;
+    protected $priv_name;
+    protected $user_prives = [];
+        
 
     public function __construct(Request $request)
     {
         $this->title = '';
         $this->content = '';
-        $this->menu = $this->template('view_menu', [
-            'login' => $this->login
-        ]);
-                       
         $this->request = $request;
-        if (!User::auth($this->request->session, $this->request->cookie)) {
-            $this->login = false;
+                      
+        $this->user = new User($this->request);               
+        $this->user_prives = $this->request->session->get('prives') ?? [];
+
+        if (!$this->user->isAuth()) {
+            $this->login = "Гость";
         } else {
-            $this->login = true;
-            $this->user = ArrayHelper::get($_SESSION, 'login');
+            $this->login = $this->request->session->get('login');
         }
+        
+        $this->menu = $this->template('view_menu', [
+           'prives' => $this->user_prives,
+        ]);
+        
+        
     
     }
 

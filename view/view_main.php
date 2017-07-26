@@ -19,10 +19,10 @@
 						<div class="subtitle">Основы языка программирования PHP</div>
 					</div>
 					
-                                        <div class="current_user"><span>User <span class="fa fa-user fa-fw"></span></span> : <i> <?=$user?></i></div>
+                                        <div class="current_user"><span>User <span class="fa fa-user fa-fw"></span></span> : <i> <?=$login?></i></div>
                                         <div id="user_menu">
                                             <div class="user_menu">
-                                            <?php if ($login === true):?>
+                                            <?php if ($login !== 'Гость'):?>
                                                 <a href="<?=BASE_PATH?>unlogin">Выйти</a> 
                                             <?php else: ?>
                                                 <a href="<?=BASE_PATH?>login">Вход </a><span>|</span><a href="<?=BASE_PATH?>reg"> Регистрация</a>  

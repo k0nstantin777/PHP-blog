@@ -22,27 +22,6 @@ class Validator implements ValidatorInterface
 
     public function run(array $params)
     {
-        /* проверка целостности отправленной формы */
-//        if (isset($params['fields'])) {
-//            $formCrash = false;
-//            // проверка количества отправленых полей
-//            if (count($params['fields']) !== count($params) -1 ){
-//               $formCrash = true;
-//            }
-//            
-//            // проверка аттрибута name отправленных полей из формы HTML
-//            foreach ($params as $key => $value){
-//                if (!in_array($key, $params['fields']) && $key !== 'fields' || $value === null){
-//                    $formCrash = true;
-//                }
-//            }
-//            
-//            if ($formCrash){
-//                $this->errors[] = 'Не пытайтесь подделать форму!';
-//                return $this->errors;
-//            }
-//        }
-        
         /* валидация данных формы */
      
         foreach ($this->schema as $name => $rules) {
@@ -91,10 +70,9 @@ class Validator implements ValidatorInterface
                     
                 }
             } 
-                                   
-            
+ 
             //запись валидных данных в массив $this->clean
-            if (!isset($this->errors[$name]) && isset($params[$name])) {
+            if (!isset($this->errors[$name]) && isset($params[$name]) && !isset($rules['check'])) {
                 $this->clean[$name] = trim(htmlspecialchars($params[$name]));
             } 
         }

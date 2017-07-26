@@ -1,4 +1,4 @@
-<?php if ($login === true): ?>
+<?php if ($login !== 'Гость'): ?>
     <span class="h3">Вы уже авторизованы, для регистрации другого пользователя нажмите выход!</span>
     <p class="p"><a href="<?=BASE_PATH?>unlogin">Выход</a></p>
 <?php elseif (isset ($get['success'])): ?>
@@ -18,14 +18,14 @@
         <?php endif; ?> 
     <label for="password">Пароль</label><br> 
     <input type="password" name="password" id="password" value="<?=$post['password'] ?? ''?>"
-        <?php if (isset ($errors['password'])): ?>    
+        <?php if (isset ($errors['uncryptPass'])): ?>    
            class="error"
         <?php endif; ?>   
     /> <br>
-        <?php if (isset ($errors['password'])): ?>   
-           <p id="error"> <?=$errors['password']?></p>
+        <?php if (isset ($errors['uncryptPass'])): ?>   
+           <p id="error"> <?=$errors['uncryptPass']?></p>
         <?php endif; ?> 
-    <input id="submit" type="submit" value="Зарегестрироваться"/>
+    <input id="submit" type="submit" name="submit" value="Зарегестрироваться"/>
 </form>
 <p id="error"><?= $msg ?? ''; ?></p>
 

@@ -10,6 +10,7 @@ namespace model;
 
 use core\DBDriverInterface,
     core\exception\ValidatorException,
+    core\DBDriver,
     core\ValidatorInterface;
 
 abstract class BaseModel
@@ -54,7 +55,7 @@ abstract class BaseModel
     /**
      * Вывод всех записей из таблицы $this->table
      * 
-     * @return bool
+     * @return array
      */
     public function getAll()
     {
@@ -66,12 +67,11 @@ abstract class BaseModel
      * 
      * @param integer $id
      * 
-     * @return array|false;
+     * @return array;
      */
     public function getOne($id)
     {
-        $one = $this->db->Query("SELECT * FROM {$this->table} WHERE {$this->id_name} = :id LIMIT 1", ['id' => $id]);
-        return !empty($one) ? $one[0] : false;
+        return $one = $this->db->Query("SELECT * FROM {$this->table} WHERE {$this->id_name} = :id LIMIT 1", ['id' => $id], DBDriver::FETCH_ONE);
     }
 
     /**
@@ -79,7 +79,7 @@ abstract class BaseModel
      * 
      * @param integer $count
      * 
-     * @return bool;
+     * @return array;
      */
     public function getRandLimit($count)
     {
@@ -91,7 +91,7 @@ abstract class BaseModel
      * 
      * @param integer $id
      * 
-     * @return bool;
+     * @return void;
      */
     public function delete($id)
     {
@@ -102,17 +102,16 @@ abstract class BaseModel
      * добавление статьи 
      * @param array $params
      * 
-     * @return bool; 
+     * @return void; 
      */
     public function add(array $params)
     {
-                
         $this->validator->run($params);
         
         if (!empty($this->validator->errors)) {
             throw new ValidatorException($this->validator->errors);
         } 
-        
+       
         return $this->db->Insert("{$this->table}", $this->validator->clean);
         
     }
@@ -121,7 +120,7 @@ abstract class BaseModel
      * Изменение статьи
      * @param array $params 
      * 
-     * @return bool;
+     * @return void;
      */
     public function edit(array $params)
     {

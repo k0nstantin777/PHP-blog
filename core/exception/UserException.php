@@ -11,7 +11,7 @@ class UserException extends BaseException
 {
     private $errors;
     
-    public function __construct(array $errors =[], $message = '', $code = 403, \Exception $previus = null)
+    public function __construct(array $errors =[], $message = 'Error!', $code = 403, \Exception $previus = null)
     {
         parent::__construct($message, $code, $previus);
         $this->errors = $errors;

@@ -10,7 +10,10 @@ namespace model;
 
 use model\BaseModel,
     core\DBDriverInterface,
-    core\ValidatorInterface;
+    core\ValidatorInterface,
+    core\ArrayHelper,
+    core\exception\ValidatorException,
+    core\DBDriver;
 
 class UserModel extends BaseModel
 {
@@ -36,11 +39,19 @@ class UserModel extends BaseModel
 
 			'password' => [
 				'type' => 'string',
-				'length' => [4, 20],
+				'length' => 72,
 				'require' => true, 
                                 'name' => 'Пароль'
 			],
-                        
+        
+                        'uncryptPass' => [
+                                'type' => 'string',
+                                'length' => [6, 20],
+                                'check' => true, //если есть параметр check - поле не записывается в БД
+                                'require' => true,
+                                'name' => 'Пароль'
+                        ],
+                                                       
                         'dt' => [
 				'type' => 'string',
 				'length' => 20,
@@ -51,15 +62,71 @@ class UserModel extends BaseModel
         
     }
     
+    /**
+     * Валидация полей формы без записи в БД
+     * @param type $fields
+     * @throws ValidatorException
+     */
+    public function getValidFields ($fields)
+    {
+        $this->validator->run($fields);
+            if (!empty($this->validator->errors)) {
+                throw new ValidatorException($this->validator->errors);
+            } 
+    }
+
+    /**
+     * Выборка из таблицы users по $login
+     * @param string $login
+     * @return array
+     */
     public function getByLogin($login)
     {
-        $user = $this->db->Query("SELECT * FROM {$this->table} WHERE login = :login", ['login' => $login]);
-        
-        return !empty($user) ? $user[0] : false;                
+        return $this->db->Query("SELECT * FROM {$this->table} WHERE login = :login", ['login' => $login], DBDriver::FETCH_ONE);
     } 
     
-    public function addUser($params)
+    /**
+     * Проверка наличия у пользователя $login привилегии $prive_name
+     * @param string $login
+     * @param string $prive_name
+     * @return array
+     */
+    public function getPrive ($login, $prive_name)
     {
-        return $this->db->Insert("{$this->table}", $params);                
+        return  $this->db->Query("SELECT login, privs.name as priv_name
+                                 FROM {$this->table}
+                                 JOIN roles ON users.id_role = roles.id
+                                 JOIN privs_to_roles ON roles.id = privs_to_roles.id_role
+                                 JOIN privs ON privs_to_roles.id_priv = privs.id
+                                 WHERE privs.name = :priv_name AND login = :login",
+                                 ['priv_name' => $prive_name, 'login' => $login],
+                                 DBDriver::FETCH_ONE);
+    
+    }                             
+    
+    /**
+     * Получение всех привилегий текущего пользователя (для отображения возможных действий в шаблонах view_xxx)
+     * @param string $login
+     * @return array
+     */
+    public function getPrives ($login)
+    {
+        $prives = [];
+        
+        $results = $this->db->Query("SELECT privs.name as priv_name
+                                 FROM {$this->table}
+                                 JOIN roles ON users.id_role = roles.id
+                                 JOIN privs_to_roles ON roles.id = privs_to_roles.id_role
+                                 JOIN privs ON privs_to_roles.id_priv = privs.id
+                                 WHERE login = :login",
+                                 ['login' => $login],
+                                 DBDriver::FETCH_ALL);
+        
+        for ($i = 0; $i < count($results); $i++){
+            $prives [] = $results[$i]['priv_name'];
+        }
+        
+        return $prives;
     }
+    
 }

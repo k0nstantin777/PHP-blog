@@ -4,6 +4,7 @@ namespace core;
 
 use core\exception\PageNotFoundException,
     core\exception\ValidatorException,
+    core\exception\AccessException,
     controller\BaseController;
     
 
@@ -78,6 +79,14 @@ class Application
                 )
             )->handle($e, 'Error 404 - Page not found!');
             
+        } catch (AccessException $e) {
+            (
+                new ErrorHandler(
+                    new BaseController($this->request), 
+                    null,
+                    DEVELOP
+                )
+            )->handle($e, 'Access Denied!');
         } catch (\Exception $e) {
             (
                 new ErrorHandler(
@@ -94,7 +103,7 @@ class Application
      */
     private function initRequest()
     {
-        $this->request = new Request($_GET, $_POST, $_FILES, $_COOKIE, $_SERVER, $_SESSION);
+        $this->request = new Request($_GET, $_POST, $_FILES, new Cookie(), $_SERVER, new Session());
     }
 
     /**

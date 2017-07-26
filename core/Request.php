@@ -44,7 +44,7 @@ class Request
      */
     public $session;
 
-    public function __construct($get, $post, $file, $cookie, $server, $session)
+    public function __construct($get, $post, $file, Cookie $cookie, $server, Session $session)
     {
         $this->get = $get;
         $this->post = $post;

@@ -12,6 +12,9 @@ use core\DBDriverInterface,
 class DBDriver implements DBDriverInterface
 {
 
+    const FETCH_ONE = 0;
+    const FETCH_ALL = 1;
+    
     private $pdo;
 
     public function __construct(\PDO $pdo)
@@ -26,12 +29,12 @@ class DBDriver implements DBDriverInterface
      * 
      * @return array 
      */
-    public function Query($sql, array $params = [])
+    public function Query($sql, array $params = [], $fetch = self::FETCH_ALL)
     {
         $q = $this->pdo->prepare($sql);
         $q->execute($params);
-        return $q->fetchAll();
-  
+        
+        return $fetch === self::FETCH_ALL ? $q->fetchAll() : $q->fetch();
     }
 
     /**

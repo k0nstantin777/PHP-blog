@@ -34,7 +34,7 @@ class UserController extends BaseController {
      * Объект класса User
      * @var object 
      */
-    public $userObj;
+    //public $userObj;
     
     public $mSession;
 
@@ -42,9 +42,8 @@ class UserController extends BaseController {
      public function __construct(Request $request)
     {
         parent::__construct($request);
-        $this->mUsers = new UserModel(new DBDriver(DB::get()), new Validator());
-        $this->mSession = new SessionModel(new DBDriver(DB::get()), new Validator());
-        $this->userObj = new User($this->mUsers, $this->mSession);
+        $this->mUser = new UserModel(new DBDriver(DB::get()), new Validator());
+        
     }   
     
     
@@ -54,19 +53,18 @@ class UserController extends BaseController {
         /* Страница авторизации */
         $msg = '';
         $errors = [];
-        $this->mUsers->setSchema(['login', 'password']);
+                        
         //проверка на POST или GET
         if ($this->request->isPost()) {
-            
+           
             try {
-                $this->userObj->login($this->request->post, $this->request->session, $this->request->cookie);     
+                $this->user->login();     
                 header("Location:". BASE_PATH . 'posts');
                 exit();
             } catch (UserException $e) {
                 $errors = $e->getErrors();
                 $msg = $e->getMessage();
             }
-
         }
           
         $this->content = $this->template('view_login', [
@@ -84,17 +82,17 @@ class UserController extends BaseController {
     {
         $errors = [];
         $msg = '';
-        $this->mUsers->setSchema(['login', 'password']);
+        $this->mUser->setSchema(['login', 'password']);
         if($this->request->isPost()){
             
             try {
-                $this->userObj->registration($this->request->post);     
+                $this->user->registration($this->request->post);     
                 header("Location: ".BASE_PATH. "reg?success=reg");
                 exit();
             } catch (UserException $e) {
                 $errors = $e->getErrors();
                 $msg = $e->getMessage();
-            }
+            } 
                 
         } 
 
@@ -110,17 +108,10 @@ class UserController extends BaseController {
     
     public function unloginAction ()
     {
-        $this->userObj->unLogin($this->user);
-        $this->user = 'Гость';
-        $this->login = false;
-        unset($this->request->session['auth']);
-        unset($this->request->session['login']);
-        Core::deleteCookie('login');
-        Core::deleteCookie('password');
+        $this->user->unLogin();
+        $this->login = 'Гость';
         header("Location: ".BASE_PATH);
         exit();
     }
-    
-    
-    
+  
 }

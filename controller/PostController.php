@@ -17,20 +17,21 @@ use controller\BaseController,
     core\ArrayHelper,
     core\exception\ValidatorException,
     core\exception\PostException,
+    core\exception\AccessException,
     core\exception\PageNotFoundException;
 
 class PostController extends BaseController
 {
 
     public $mArticles;
-    
+   
     public function __construct(Request $request)
     {
         parent::__construct($request);
         $this->mArticles = new PostModel(new DBDriver(DB::get()), new Validator());
         $this->menu = $this->template('view_menu', [
             'articles' => $this->mArticles->getAll(),
-            'login' => $this->login,
+            'prives' => $this->user_prives,
         ]);
     }
 
@@ -41,8 +42,7 @@ class PostController extends BaseController
     {
         $this->title = 'Мой блог';
         $this->aside = $this->template('view_anons', ['articles' => $this->mArticles->getRandLimit(7)]);
-        $this->content = $this->template('view_index', ['login' => $this->login,
-                                                        'user' => $this->user]);
+        $this->content = $this->template('view_index', ['login' => $this->login, 'prives' => $this->user_prives]);
     }
 
     /* страница вывода одной статьи /post */
@@ -55,9 +55,9 @@ class PostController extends BaseController
             throw new PageNotFoundException ();
         }     
         $this->content = $this->template('view_post', [
-                'login' => $this->login,
                 'article' => $article,
-                'back' => $this->request->server['HTTP_REFERER'],
+                'back' => ArrayHelper::get($this->request->server, 'HTTP_REFERER', BASE_PATH),
+                'prives' => $this->user_prives,
         ]);
         $this->title = $article['title'];
         $this->aside = '';
@@ -70,16 +70,15 @@ class PostController extends BaseController
     {
         /* вывод сообщения после выполнения действия */
         $msg = '';
-
-        if ($this->login === true) {
+       
+        if ($this->login !== 'Гость') {
             $success = isset($this->request->get['success']) ? $this->request->get['success'] : '';
             $msgs = ['edit' => 'Изменения сохранены', 'add' => 'Статья добавлена', 'delete' => 'Статья удалена'];
             $msg = isset($msgs[$success]) ? $msgs[$success] : '';
         }
         $this->content = $this->template('view_posts', [
             'articles' => $this->mArticles->getAll(),
-            'login' => $this->login,
-            'user' => $this->user,
+            'prives' => $this->user_prives,
             'msg' => $msg,
         ]);
         $this->aside = $this->template('view_anons', ['articles' => $this->mArticles->getRandLimit(7)]);
@@ -91,33 +90,32 @@ class PostController extends BaseController
      */
     public function addAction()
     {
-        if (!$this->login) {
-            header("Location: " . BASE_PATH . "login");
-            exit();
+        $this->priv_name = 'add_post';
+        
+        if (!$this->user->can($this->priv_name)) {
+            throw new AccessException ();
         }
         $errors = [];
         $msg = '';
         
-        //устанавливаем схему ожидаемых полей из формы
-        $this->mArticles->setSchema(['title', 'content']);
-                
+        //хэш полей формы
+        $hash_form = md5('title'.'content'.'submit'); 
         if ($this->request->isPost()) {
-            $fields = ArrayHelper::extract($this->request->post, $this->mArticles->getSchema());
-                        
-                try {
-                    if (in_array(null, $fields, true)){
-                        throw new PostException('Не пытайтесь подделать форму!');
-                    } 
-                    $name = $fields['title'];
-                    $text = $fields['content'];
-                    $this->mArticles->add(['title' => $name, 'text' => $text]);
-                    header("Location:" . BASE_PATH . "posts?success=add");
-                    exit();
-                } catch (ValidatorException $e) {
-                    $errors = $e->getErrors();
-                } catch (PostException $e) {
-                    $msg = $e->getMessage();
-                } 
+            
+            try {
+                if ($hash_form !== md5(implode(array_keys($this->request->post)))){
+                    throw new PostException('Не пытайтесь подделать форму!');
+                }
+                $name = $this->request->post['title'];
+                $text = $this->request->post['content'];
+                $this->mArticles->add(['title' => $name, 'text' => $text]);
+                header("Location:" . BASE_PATH . "posts?success=add");
+                exit();
+            } catch (ValidatorException $e) {
+                $errors = $e->getErrors();
+            } catch (PostException $e) {
+                $msg = $e->getMessage();
+            } 
         } 
         
         $this->content = $this->template('view_add', [
@@ -134,9 +132,10 @@ class PostController extends BaseController
     /* страница редактрирование статьи /edit/id */
     public function editAction()
     {
-        if (!$this->login) {
-            header("Location: " . BASE_PATH . "login");
-            exit();
+        $this->priv_name = 'edit_post';
+
+        if (!$this->user->can($this->priv_name)) {
+            throw new AccessException ();
         }
         
         $id = $this->request->get['id'];
@@ -148,34 +147,36 @@ class PostController extends BaseController
         
         $errors = [];
         $msg = '';
-        $this->mArticles->setSchema(['title', 'content', 'id']);
-                
-        /* проверка отправки формы методом POST */
+          
+        // обработка формы методом POST 
         if ($this->request->isPost()) {
-            $fields = ArrayHelper::extract($this->request->post, $this->mArticles->getSchema());
-                
-                try {    
-                    if (in_array(null, $fields, true)){
-                        throw new PostException('Не пытайтесь подделать форму!');
-                    } 
-                    $name = $fields['title'];
-                    $text = $fields['content'];
-                    $this->mArticles->edit(['id_article' => $id, 'title' => $name, 'text' => $text]);
-                    header("Location:" . BASE_PATH . "posts?success=edit");
-                    exit();
-                } catch (ValidatorException $e) {
-                    $errors = $e->getErrors();
-                } catch (PostException $e) {
-                    $msg = $e->getMessage();
-                } 
+            //хэшируем поля формы
+            $hash_form = md5('id'.'title'.'content'.'submit'.$id);
+            try {    
+                if ($hash_form !== md5(implode(array_keys($this->request->post)). $this->request->post['id'] )){
+                    throw new PostException('Не пытайтесь подделать форму!');
+                }
+                $id = $this->request->post['id'];
+                $name = $this->request->post['title'];
+                $text = $this->request->post['content'];
+                $this->mArticles->edit(['id_article' => $id, 'title' => $name, 'text' => $text]);
+                header("Location:" . BASE_PATH . "posts?success=edit");
+                exit();
+            } catch (ValidatorException $e) {
+                $errors = $e->getErrors();
+            } catch (PostException $e) {
+                $msg = $e->getMessage();
+            } 
         } 
 
+        
         $this->content = $this->template('view_edit', [
                 'name' => ArrayHelper::get($this->request->post, 'title', $article['title']),
                 'text' => ArrayHelper::get($this->request->post, 'content', $article['text']),
                 'back' => ArrayHelper::get($this->request->server, 'HTTP_REFERER', BASE_PATH),
                 'errors'=> $errors,
                 'msg' => $msg,
+                'prives' => $this->request->session->get('prives'),
                 'id' => $id
                 
         ]);
@@ -189,9 +190,10 @@ class PostController extends BaseController
 
     public function deleteAction()
     {
-        if (!$this->login) {
-            header("Location: " . BASE_PATH . "login");
-            exit();
+        $this->priv_name = 'delete_post';
+        
+        if (!$this->user->can($this->priv_name)) {
+            throw new AccessException ();
         }
         
         $id = $this->request->get['id'];
