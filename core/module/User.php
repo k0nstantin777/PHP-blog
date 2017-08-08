@@ -1,6 +1,6 @@
 <?php
 
-namespace core;
+namespace core\module;
 
 /**
  * Модуль работы с User 
@@ -9,7 +9,13 @@ namespace core;
  */
 use model\UserModel,
     model\SessionModel,
+    model\PrivModel,
     core\exception\UserException,
+    core\database\DBDriver,
+    core\database\DB,
+    core\Request,
+    core\module\Validator,
+    core\helper\ArrayHelper,
     core\exception\ValidatorException;
 
 class User
@@ -19,12 +25,15 @@ class User
     
     private $mSession;
     
+    private $mPriv;
+    
     private $request;
     
-    public function __construct(Request $request)
+    public function __construct(Request $request, UserModel $mUser, SessionModel $mSession, PrivModel $mPriv)
     {
-        $this->mUser = new UserModel(new DBDriver(DB::get()), new Validator());
-        $this->mSession = new SessionModel(new DBDriver(DB::get()), new Validator());
+        $this->mUser = $mUser;
+        $this->mSession = $mSession;
+        $this->mPriv = $mPriv;
         $this->request = $request;
     }
 
@@ -76,7 +85,7 @@ class User
         
         //проверка правильности введенного пароля
         if($this->myCrypt($this->request->post['password']) !== $userLogin['password']) {
-            throw new UserException([], sprintf('Неправильный пароль!'));
+            throw new UserException([], 'Неправильный пароль!');
         }    
         
         //устанавливаем параметры сессии
@@ -128,7 +137,7 @@ class User
     public function can($prive_name)
     {
         $login = $this->request->session->get('login');
-        return $this->mUser->getPrive($login, $prive_name);
+        return $this->mPriv->getByLoginAndPriveName($login, $prive_name);
     }
     
     /**
@@ -147,9 +156,8 @@ class User
         //устанавливаем параметры сессии
         $this->request->session->set('sid', $sid);
         $this->request->session->set('login', ArrayHelper::get($userLogin, 'login'));
-        $this->request->session->set('prives', $this->mUser->getPrives(ArrayHelper::get($userLogin, 'login')));
+        $this->request->session->set('prives', $this->mPriv->getAllByLogin(ArrayHelper::get($userLogin, 'login')));
         $this->mSession->add(['sid' => $sid, 'user_id' => $userLogin[$this->mUser->id_name]]);
- 
     }
 
 

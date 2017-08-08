@@ -3,9 +3,18 @@
 namespace core;
 
 use core\exception\PageNotFoundException,
-    core\exception\ValidatorException,
     core\exception\AccessException,
-    controller\BaseController;
+    core\exception\BaseException,
+    core\exception\ServiceProviderException,
+    core\error_hendler\ErrorHandler,
+    core\error_hendler\Logger,
+    core\helper\Cookie,
+    core\helper\Session,
+    core\ServiceContainer,
+    core\providers\ModelProvider,
+    core\providers\UserProvider,
+    core\providers\ErrorHandlerProvider,
+    core\providers\RequestProvider;
     
 
 /**
@@ -24,7 +33,7 @@ class Application
 
     /**
      * Класс контроллера
-     * @var stirng
+     * @var stirng 
      */
     private $controller;
 
@@ -33,17 +42,26 @@ class Application
      * @var string
      */
     private $action;
+    
+    private $container;
 
     public function __construct()
     {
+
+        $this->container = new ServiceContainer();
+        
+        (new RequestProvider())->register($this->container);
         $this->initRequest();
+
+        (new ErrorHandlerProvider())->register($this->container);
+        (new ModelProvider())->register($this->container);
+        (new UserProvider())->register($this->container);
+        
         $this->handlingUri();
     }
 
     /**
      * Запуск блога
-     * 
-     * @throws PageNotFoundException
      * 
      */
     public function run()
@@ -54,7 +72,7 @@ class Application
                 throw new PageNotFoundException();
             }
 
-            $ctrl = new $this->controller($this->request);
+            $ctrl = new $this->controller($this->request, $this->container);
 
             $action = $this->action;
 
@@ -62,39 +80,24 @@ class Application
 
             $ctrl->response();
         } catch (\PDOException $e) {
-            (
-                new ErrorHandler(
-                    new BaseController($this->request), 
-                    new Logger('critical', LOG_DIR),
-                    DEVELOP
-                )
-            )->handle($e, 'Ooooops... Something went wrong!');
+
+            $this->container->get('errorHandler.logger', [$this->request])->handle($e, 'Ooooops... Something went wrong!');
             
         } catch (PageNotFoundException $e) {
-            (
-                new ErrorHandler(
-                    new BaseController($this->request),
-                    null,
-                    DEVELOP
-                )
-            )->handle($e, 'Error 404 - Page not found!');
-            
+
+            $this->container->get('errorHandler.screen', [$this->request])->handle($e, 'Error 404 - Page not found!');
+             
         } catch (AccessException $e) {
-            (
-                new ErrorHandler(
-                    new BaseController($this->request), 
-                    null,
-                    DEVELOP
-                )
-            )->handle($e, 'Access Denied!');
+           
+            $this->container->get('errorHandler.screen', [$this->request])->handle($e, 'Access Denied!');
+            
+        } catch (BaseException $e) {
+     
+            $this->container->get('errorHandler.logger', [$this->request])->handle($e, 'Ooooops... Something went wrong!');
+            
         } catch (\Exception $e) {
-            (
-                new ErrorHandler(
-                    new BaseController($this->request), 
-                    new Logger('critical', LOG_DIR),
-                    DEVELOP
-                )
-            )->handle($e, 'Ooooops... Something went wrong!');
+            
+            $this->container->get('errorHandler.logger', [$this->request])->handle($e, 'Ooooops... Something went wrong!');
         }
     }
     
@@ -103,7 +106,7 @@ class Application
      */
     private function initRequest()
     {
-        $this->request = new Request($_GET, $_POST, $_FILES, new Cookie(), $_SERVER, new Session());
+        $this->request = $this->container->get('request');
     }
 
     /**

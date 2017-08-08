@@ -1,9 +1,8 @@
 <?php
 
-namespace core;
+namespace core\error_handler;
 
-use controller\BaseController,
-    core\Logger;
+use controller\BaseController;
     
 
 /**

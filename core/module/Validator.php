@@ -1,6 +1,8 @@
 <?php
 
-namespace core;
+namespace core\module;
+
+use core\helper\ArrayHelper;
 
 
 /**

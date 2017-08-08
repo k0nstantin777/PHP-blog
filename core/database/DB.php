@@ -6,7 +6,7 @@
  * @author bumer
  */
 
-namespace core;
+namespace core\database;
 
 use \PDO;
 

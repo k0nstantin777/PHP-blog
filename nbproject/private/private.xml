@@ -12,13 +12,16 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/bumer/www/php1.loc/blog/core/ArrayHelper.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/core/providers/ModelProvider.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/core/providers/UserProvider.php</file>
             <file>file:/home/bumer/www/php1.loc/blog/controller/UserController.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/core/Application.php</file>
             <file>file:/home/bumer/www/php1.loc/blog/model/BaseModel.php</file>
-            <file>file:/home/bumer/www/php1.loc/blog/view/view_login.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/config.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/core/database/DB.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/model/SessionModel.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/core/module/User.php</file>
             <file>file:/home/bumer/www/php1.loc/blog/controller/BaseController.php</file>
-            <file>file:/home/bumer/www/php1.loc/blog/core/User.php</file>
-            <file>file:/home/bumer/www/php1.loc/blog/model/UserModel.php</file>
             <file>file:/home/bumer/www/php1.loc/blog/controller/PostController.php</file>
         </group>
     </open-files>

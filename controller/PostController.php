@@ -10,11 +10,12 @@ namespace controller;
 
 use controller\BaseController,
     model\PostModel,
-    core\DB,
-    core\DBDriver,
-    core\Validator,
+    core\database\DB,
+    core\database\DBDriver,
+    core\module\Validator,
     core\Request,
-    core\ArrayHelper,
+    core\helper\ArrayHelper,
+    core\ServiceContainer,
     core\exception\ValidatorException,
     core\exception\PostException,
     core\exception\AccessException,
@@ -25,14 +26,17 @@ class PostController extends BaseController
 
     public $mArticles;
    
-    public function __construct(Request $request)
+    public function __construct(Request $request, ServiceContainer $container)
     {
-        parent::__construct($request);
-        $this->mArticles = new PostModel(new DBDriver(DB::get()), new Validator());
+        parent::__construct($request, $container);
+        //$this->mArticles = new PostModel(new DBDriver(DB::get()), new Validator());
+        $this->mArticles = $this->container->get('model.post');
         $this->menu = $this->template('view_menu', [
             'articles' => $this->mArticles->getAll(),
             'prives' => $this->user_prives,
         ]);
+        
+        
     }
 
     /**

@@ -8,10 +8,10 @@
 
 namespace model;
 
-use core\DBDriverInterface,
+use core\database\DBDriverInterface,
     core\exception\ValidatorException,
-    core\DBDriver,
-    core\ValidatorInterface;
+    core\database\DBDriver,
+    core\module\ValidatorInterface;
 
 abstract class BaseModel
 {

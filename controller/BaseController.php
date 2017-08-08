@@ -8,9 +8,10 @@
 
 namespace controller;
 
-use core\User,
+use core\module\User,
     core\Request,
-    core\ArrayHelper,
+    core\helper\ArrayHelper,
+    core\ServiceContainer,
     core\exception\PageNotFoundException;
 
 class BaseController
@@ -25,15 +26,18 @@ class BaseController
     protected $request;
     protected $priv_name;
     protected $user_prives = [];
-        
+    protected $container;
 
-    public function __construct(Request $request)
+
+
+    public function __construct(Request $request, ServiceContainer $container)
     {
+        $this->container = $container;
         $this->title = '';
         $this->content = '';
         $this->request = $request;
-                      
-        $this->user = new User($this->request);               
+        
+        $this->user = $this->container->get('service.user', [$this->request]);   
         $this->user_prives = $this->request->session->get('prives') ?? [];
 
         if (!$this->user->isAuth()) {
@@ -45,9 +49,7 @@ class BaseController
         $this->menu = $this->template('view_menu', [
            'prives' => $this->user_prives,
         ]);
-        
-        
-    
+
     }
 
     public function __call($name, $args)
