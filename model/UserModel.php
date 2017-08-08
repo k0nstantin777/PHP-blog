@@ -9,11 +9,11 @@
 namespace model;
 
 use model\BaseModel,
-    core\DBDriverInterface,
-    core\ValidatorInterface,
-    core\ArrayHelper,
+    core\database\DBDriverInterface,
+    core\module\ValidatorInterface,
+    core\helper\ArrayHelper,
     core\exception\ValidatorException,
-    core\DBDriver;
+    core\database\DBDriver;
 
 class UserModel extends BaseModel
 {
@@ -84,49 +84,5 @@ class UserModel extends BaseModel
     {
         return $this->db->Query("SELECT * FROM {$this->table} WHERE login = :login", ['login' => $login], DBDriver::FETCH_ONE);
     } 
-    
-    /**
-     * Проверка наличия у пользователя $login привилегии $prive_name
-     * @param string $login
-     * @param string $prive_name
-     * @return array
-     */
-    public function getPrive ($login, $prive_name)
-    {
-        return  $this->db->Query("SELECT login, privs.name as priv_name
-                                 FROM {$this->table}
-                                 JOIN roles ON users.id_role = roles.id
-                                 JOIN privs_to_roles ON roles.id = privs_to_roles.id_role
-                                 JOIN privs ON privs_to_roles.id_priv = privs.id
-                                 WHERE privs.name = :priv_name AND login = :login",
-                                 ['priv_name' => $prive_name, 'login' => $login],
-                                 DBDriver::FETCH_ONE);
-    
-    }                             
-    
-    /**
-     * Получение всех привилегий текущего пользователя (для отображения возможных действий в шаблонах view_xxx)
-     * @param string $login
-     * @return array
-     */
-    public function getPrives ($login)
-    {
-        $prives = [];
-        
-        $results = $this->db->Query("SELECT privs.name as priv_name
-                                 FROM {$this->table}
-                                 JOIN roles ON users.id_role = roles.id
-                                 JOIN privs_to_roles ON roles.id = privs_to_roles.id_role
-                                 JOIN privs ON privs_to_roles.id_priv = privs.id
-                                 WHERE login = :login",
-                                 ['login' => $login],
-                                 DBDriver::FETCH_ALL);
-        
-        for ($i = 0; $i < count($results); $i++){
-            $prives [] = $results[$i]['priv_name'];
-        }
-        
-        return $prives;
-    }
-    
+              
 }

@@ -1,8 +1,7 @@
 <?php
 
-namespace core;
-use core\DBDriverInterface,
-    core\Core;
+namespace core\database;
+use core\Core;
 
 /**
  * DBDriver

@@ -7,8 +7,8 @@
  */
 namespace model;
 use model\BaseModel,
-    core\DBDriverInterface,
-    core\ValidatorInterface;
+    core\database\DBDriverInterface,
+    core\module\ValidatorInterface;
 
 
 class PostModel extends BaseModel

@@ -2,6 +2,9 @@
 
 namespace core;
 
+use core\helper\Cookie,
+    core\helper\Session;
+
 /**
  * Request
  *

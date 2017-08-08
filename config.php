@@ -1,7 +1,5 @@
 <?php
-//    if (session_id() === null){
-//        session_id(bin2hex(random_bytes(8)));
-//    }   
+ 
     session_start();
 
     

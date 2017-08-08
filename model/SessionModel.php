@@ -4,10 +4,10 @@
 namespace model;
 
 use model\BaseModel,
-    core\DBDriverInterface,
-    core\DBDriver,
-    core\ValidatorInterface,
-    core\ArrayHelper;
+    core\database\DBDriverInterface,
+    core\database\DBDriver,
+    core\module\ValidatorInterface,
+    core\helper\ArrayHelper;
 
 /**
  * SessionModel

@@ -11,12 +11,12 @@ namespace controller;
 use controller\BaseController,
     model\UserModel,
     model\SessionModel,
-    core\Core,
-    core\DB,
-    core\User,    
-    core\DBDriver,
+    core\database\DB,
+    core\module\User,    
+    core\database\DBDriver,
     core\Request,
-    core\Validator, 
+    core\ServiceContainer,
+    core\module\Validator, 
     core\exception\ValidatorException,
     core\exception\UserException,    
     core\exception\PageNotFoundException;
@@ -39,10 +39,11 @@ class UserController extends BaseController {
     public $mSession;
 
 
-     public function __construct(Request $request)
+     public function __construct(Request $request, ServiceContainer $container)
     {
-        parent::__construct($request);
-        $this->mUser = new UserModel(new DBDriver(DB::get()), new Validator());
+        parent::__construct($request, $container);
+        //$this->mUser = new UserModel(new DBDriver(DB::get()), new Validator());
+        $this->mUser = $this->container->get('model.user');
         
     }   
     
