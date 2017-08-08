@@ -8,6 +8,7 @@ use core\exception\ServiceProviderException,
 class ServiceContainer
 {
     private $container = [];
+
     
     public function register (string $name, \Closure $service)
     {
@@ -33,6 +34,7 @@ class ServiceContainer
             
         return call_user_func_array(ObjectContainer::get($this->container[$name]), $params);
                  
+
         } catch (ServiceProviderException $e){
             die($e->getMessage());
         }    
