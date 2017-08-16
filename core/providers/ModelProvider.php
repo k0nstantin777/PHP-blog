@@ -53,6 +53,14 @@ class ModelProvider
                     new Validator()
             );
         });
+       
+        $container->register('model.role', function() use ($driver, $validator) {
+            return new RoleModel(
+                    $driver,
+                    new Validator()
+            );
+        });
+       
         
     }
 }

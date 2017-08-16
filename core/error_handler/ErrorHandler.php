@@ -4,6 +4,7 @@ namespace core\error_handler;
 
 use controller\BaseController;
     
+    
 
 /**
  * Description of ErrorHandler

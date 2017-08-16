@@ -14,18 +14,18 @@ class ErrorHandlerProvider
         
         $container->register('errorHandler.logger', function($request) use ($container) {
             return new ErrorHandler(
-                            new BaseController($request, $container),
+                            $container->get('controller.base', [$request]),
                             new Logger('critical', LOG_DIR),
                             DEVELOP
                     );
         });
         
-        $container->register('errorHandler.screen', function($request) use ($container) {
+        $container->register('errorHandler.screen', function($request) use ($container)  {
             return new ErrorHandler(
-                            new BaseController($request, $container),
-                            null,
-                            DEVELOP
+                            $container->get('controller.base', [$request])
+                            
                     );
         });
     }
 }
+

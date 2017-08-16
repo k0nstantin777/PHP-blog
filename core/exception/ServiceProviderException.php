@@ -7,7 +7,7 @@ namespace core\exception;
  *
  * @author Noskov Konstantin <noskov.kos@gmail.com>
  */
-class ServiceProviderException extends \Exception
+class ServiceProviderException extends BaseException
 {
 
     public function __construct($message = "CriticalException", $code = 500, \Exception $previous = null)

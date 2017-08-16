@@ -482,3 +482,84 @@ Text: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'priv.id' in 'on cl
 #5 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
 #6 {main}
 *****************
+
+Date: 2017-08-16 19:54:31
+Level: ERROR
+Text: Function with name 'model.role' already registered in ServiceProvider
+#0 /home/bumer/www/php1.loc/blog/core/providers/ModelProvider.php(62): core\ServiceContainer->register('model.role', Object(Closure))
+#1 /home/bumer/www/php1.loc/blog/core/Application.php(63): core\providers\ModelProvider->register(Object(core\ServiceContainer))
+#2 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#3 {main}
+*****************
+
+Date: 2017-08-16 19:54:48
+Level: ERROR
+Text: Function with name 'model.role' already registered in ServiceProvider
+#0 /home/bumer/www/php1.loc/blog/core/providers/ModelProvider.php(62): core\ServiceContainer->register('model.role', Object(Closure))
+#1 /home/bumer/www/php1.loc/blog/core/Application.php(63): core\providers\ModelProvider->register(Object(core\ServiceContainer))
+#2 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#3 {main}
+*****************
+
+Date: 2017-08-16 19:54:57
+Level: ERROR
+Text: Function with name 'model.role' already registered in ServiceProvider
+#0 /home/bumer/www/php1.loc/blog/core/providers/ModelProvider.php(62): core\ServiceContainer->register('model.role', Object(Closure))
+#1 /home/bumer/www/php1.loc/blog/core/Application.php(63): core\providers\ModelProvider->register(Object(core\ServiceContainer))
+#2 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#3 {main}
+*****************
+
+Date: 2017-08-16 19:55:01
+Level: ERROR
+Text: Function with name 'model.role' already registered in ServiceProvider
+#0 /home/bumer/www/php1.loc/blog/core/providers/ModelProvider.php(62): core\ServiceContainer->register('model.role', Object(Closure))
+#1 /home/bumer/www/php1.loc/blog/core/Application.php(63): core\providers\ModelProvider->register(Object(core\ServiceContainer))
+#2 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#3 {main}
+*****************
+
+Date: 2017-08-16 19:55:15
+Level: ERROR
+Text: Function with name 'model.role' already registered in ServiceProvider
+#0 /home/bumer/www/php1.loc/blog/core/providers/ModelProvider.php(62): core\ServiceContainer->register('model.role', Object(Closure))
+#1 /home/bumer/www/php1.loc/blog/core/Application.php(63): core\providers\ModelProvider->register(Object(core\ServiceContainer))
+#2 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#3 {main}
+*****************
+
+Date: 2017-08-16 19:55:24
+Level: ERROR
+Text: Function with name 'model.role' already registered in ServiceProvider
+#0 /home/bumer/www/php1.loc/blog/core/providers/ModelProvider.php(62): core\ServiceContainer->register('model.role', Object(Closure))
+#1 /home/bumer/www/php1.loc/blog/core/Application.php(63): core\providers\ModelProvider->register(Object(core\ServiceContainer))
+#2 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#3 {main}
+*****************
+
+Date: 2017-08-16 19:56:52
+Level: ERROR
+Text: Function with name 'model.role' already registered in ServiceProvider
+#0 /home/bumer/www/php1.loc/blog/core/providers/ModelProvider.php(61): core\ServiceContainer->register('model.role', Object(Closure))
+#1 /home/bumer/www/php1.loc/blog/core/Application.php(63): core\providers\ModelProvider->register(Object(core\ServiceContainer))
+#2 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#3 {main}
+*****************
+
+Date: 2017-08-16 23:30:00
+Level: ERROR
+Text: Function with name 'model.role' already registered in ServiceProvider
+#0 /home/bumer/www/php1.loc/blog/core/providers/ModelProvider.php(62): core\ServiceContainer->register('model.role', Object(Closure))
+#1 /home/bumer/www/php1.loc/blog/core/Application.php(63): core\providers\ModelProvider->register(Object(core\ServiceContainer))
+#2 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#3 {main}
+*****************
+
+Date: 2017-08-16 23:30:01
+Level: ERROR
+Text: Function with name 'model.role' already registered in ServiceProvider
+#0 /home/bumer/www/php1.loc/blog/core/providers/ModelProvider.php(62): core\ServiceContainer->register('model.role', Object(Closure))
+#1 /home/bumer/www/php1.loc/blog/core/Application.php(63): core\providers\ModelProvider->register(Object(core\ServiceContainer))
+#2 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#3 {main}
+*****************

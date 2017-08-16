@@ -29,7 +29,7 @@ class PostController extends BaseController
     public function __construct(Request $request, ServiceContainer $container)
     {
         parent::__construct($request, $container);
-        //$this->mArticles = new PostModel(new DBDriver(DB::get()), new Validator());
+        
         $this->mArticles = $this->container->get('model.post');
         $this->menu = $this->template('view_menu', [
             'articles' => $this->mArticles->getAll(),

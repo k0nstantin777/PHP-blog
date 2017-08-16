@@ -3,6 +3,7 @@
 namespace core\error_handler;
 
 use controller\BaseController;
+    
 
 /**
  * ErrorHandlerInterface обработчик ошибок

@@ -110,7 +110,7 @@ article a.add:hover {background-color: #000066; transition: 0.6s ease-in-out }
 .left a:hover{color:#6666ff}
 
 footer{color: #fff;}
-footer .copy{line-height: 50px; padding-left: 10px; padding-right: 5%}
+footer .copy{line-height: 50px; padding-left: 10px; padding-right: 5%;     width: 50%;}
 footer .phone{line-height: 50px; position: absolute; bottom: 0px; right:10px; font-size: 17px}
 
 @media screen and (max-width: 1024px){

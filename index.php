@@ -7,8 +7,4 @@
     $app = new core\Application();
 
     $app->run();
-
-   
-        
-   
-   
+ 

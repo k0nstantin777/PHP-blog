@@ -8,8 +8,7 @@
 
 namespace controller;
 
-use core\module\User,
-    core\Request,
+use core\Request,
     core\helper\ArrayHelper,
     core\ServiceContainer,
     core\exception\PageNotFoundException;
@@ -33,13 +32,13 @@ class BaseController
     public function __construct(Request $request, ServiceContainer $container)
     {
         $this->container = $container;
+        $this->request = $request;
         $this->title = '';
         $this->content = '';
-        $this->request = $request;
         
-        $this->user = $this->container->get('service.user', [$this->request]);   
         $this->user_prives = $this->request->session->get('prives') ?? [];
 
+        $this->user = $this->container->get('service.user', [$this->request]);   
         if (!$this->user->isAuth()) {
             $this->login = "Гость";
         } else {
@@ -48,7 +47,8 @@ class BaseController
         
         $this->menu = $this->template('view_menu', [
            'prives' => $this->user_prives,
-        ]);
+        ]);       
+        
 
     }
 
@@ -61,11 +61,10 @@ class BaseController
 
     public function response()
     {
-        
         echo $html = $this->template('view_main', [
             'title' => $this->title,
             'content' => $this->content,
-            'user' => $this->user,
+            
             'login' => $this->login,
             'aside' => $this->aside,
             'menu' => $this->menu

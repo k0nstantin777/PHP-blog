@@ -8,7 +8,6 @@
  */
 
 namespace controller;
-use controller\BaseController;
 
 class PageController extends BaseController  {
   
@@ -18,6 +17,8 @@ class PageController extends BaseController  {
     
         $this->title = 'Контакты';
 
-    }        
+    }
+    
+   
     
 }

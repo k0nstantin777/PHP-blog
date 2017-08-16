@@ -17,6 +17,6 @@ class UserProvider
                 $container->get('model.priv')
             );
         });
-        
+                
     }
 }

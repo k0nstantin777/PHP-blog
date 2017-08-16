@@ -9,7 +9,9 @@ use core\exception\PageNotFoundException,
     core\providers\ModelProvider,
     core\providers\UserProvider,
     core\providers\ErrorHandlerProvider,
-    core\providers\RequestProvider;
+    core\providers\RequestProvider,
+    core\providers\ControllerProvider,
+    core\exception\ServiceProviderException;
 
 /**
  * Application движок сайта
@@ -41,17 +43,7 @@ class Application
 
     public function __construct()
     {
-
         $this->container = new ServiceContainer();
-        
-        (new RequestProvider())->register($this->container);
-        $this->initRequest();
-
-        (new ErrorHandlerProvider())->register($this->container);
-        (new ModelProvider())->register($this->container);
-        (new UserProvider())->register($this->container);
-        
-        $this->handlingUri();
     }
 
     /**
@@ -61,7 +53,15 @@ class Application
     public function run()
     {
         try {
-
+            
+            (new RequestProvider())->register($this->container);
+            $this->initRequest();
+            $this->handlingUri();
+            (new ErrorHandlerProvider())->register($this->container);
+            (new ControllerProvider())->register($this->container);
+            (new UserProvider())->register($this->container);
+            (new ModelProvider())->register($this->container); 
+            
             if (!$this->controller) {
                 throw new PageNotFoundException();
             }
@@ -85,14 +85,15 @@ class Application
            
             $this->container->get('errorHandler.screen', [$this->request])->handle($e, 'Access Denied!');
             
-        } catch (BaseException $e) {
-     
-            $this->container->get('errorHandler.logger', [$this->request])->handle($e, 'Ooooops... Something went wrong!');
-            
+        } catch (ServiceProviderException $e) {
+           
+            $this->container->get('errorHandler.screen', [$this->request])->handle($e, 'Ooooops... Something went wrong!');
+          
         } catch (\Exception $e) {
             
             $this->container->get('errorHandler.logger', [$this->request])->handle($e, 'Ooooops... Something went wrong!');
-        }
+        } 
+            
         
     }
     
