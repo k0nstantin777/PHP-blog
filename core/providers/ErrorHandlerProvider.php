@@ -22,8 +22,10 @@ class ErrorHandlerProvider
         
         $container->register('errorHandler.screen', function($request) use ($container)  {
             return new ErrorHandler(
-                            $container->get('controller.base', [$request])
-                            
+                            //$container->get('controller.base', [$request])
+                            $container->get('controller.base', [$request]),
+                            null, 
+                            DEVELOP
                     );
         });
     }

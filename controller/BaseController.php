@@ -35,21 +35,10 @@ class BaseController
         $this->request = $request;
         $this->title = '';
         $this->content = '';
-        
         $this->user_prives = $this->request->session->get('prives') ?? [];
-
-        $this->user = $this->container->get('service.user', [$this->request]);   
-        if (!$this->user->isAuth()) {
-            $this->login = "Гость";
-        } else {
-            $this->login = $this->request->session->get('login');
-        }
-        
         $this->menu = $this->template('view_menu', [
            'prives' => $this->user_prives,
-        ]);       
-        
-
+        ]);               
     }
 
     public function __call($name, $args)
@@ -64,7 +53,6 @@ class BaseController
         echo $html = $this->template('view_main', [
             'title' => $this->title,
             'content' => $this->content,
-            
             'login' => $this->login,
             'aside' => $this->aside,
             'menu' => $this->menu
@@ -77,6 +65,7 @@ class BaseController
     {
         $this->title = 'Ошибка 404';
         $this->content = $this->template('404', ['msg' => $msg]);
+        $this->login = $this->request->session->get('login') ?: 'Гость';
         header("HTTP/1.1 404 Not Found");
     }
 

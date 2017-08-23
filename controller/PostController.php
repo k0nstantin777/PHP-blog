@@ -30,6 +30,9 @@ class PostController extends BaseController
     {
         parent::__construct($request, $container);
         
+        $this->user = $this->container->get('service.user', [$this->request]);   
+        $this->login = $this->user->isAuth() ?: "Гость";
+                
         $this->mArticles = $this->container->get('model.post');
         $this->menu = $this->template('view_menu', [
             'articles' => $this->mArticles->getAll(),

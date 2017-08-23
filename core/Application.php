@@ -11,6 +11,8 @@ use core\exception\PageNotFoundException,
     core\providers\ErrorHandlerProvider,
     core\providers\RequestProvider,
     core\providers\ControllerProvider,
+    core\helper\Session,
+    core\helper\Cookie,
     core\exception\ServiceProviderException;
 
 /**
@@ -43,7 +45,14 @@ class Application
 
     public function __construct()
     {
-        $this->container = new ServiceContainer();
+        $this->initRequest();
+        $this->handlingUri();
+        $this->container = new ServiceContainer($this->request);
+        (new ErrorHandlerProvider())->register($this->container);
+        (new ControllerProvider())->register($this->container);
+        (new UserProvider())->register($this->container);
+        (new ModelProvider())->register($this->container); 
+ 
     }
 
     /**
@@ -53,15 +62,7 @@ class Application
     public function run()
     {
         try {
-            
-            (new RequestProvider())->register($this->container);
-            $this->initRequest();
-            $this->handlingUri();
-            (new ErrorHandlerProvider())->register($this->container);
-            (new ControllerProvider())->register($this->container);
-            (new UserProvider())->register($this->container);
-            (new ModelProvider())->register($this->container); 
-            
+                                    
             if (!$this->controller) {
                 throw new PageNotFoundException();
             }
@@ -84,10 +85,6 @@ class Application
         } catch (AccessException $e) {
            
             $this->container->get('errorHandler.screen', [$this->request])->handle($e, 'Access Denied!');
-            
-        } catch (ServiceProviderException $e) {
-           
-            $this->container->get('errorHandler.screen', [$this->request])->handle($e, 'Ooooops... Something went wrong!');
           
         } catch (\Exception $e) {
             
@@ -102,7 +99,7 @@ class Application
      */
     private function initRequest()
     {
-        $this->request = $this->container->get('request');
+        $this->request = new Request($_GET, $_POST, $_FILES, new Cookie(), $_SERVER, new Session());
     }
 
     /**

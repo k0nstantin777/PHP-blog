@@ -563,3 +563,16 @@ Text: Function with name 'model.role' already registered in ServiceProvider
 #2 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
 #3 {main}
 *****************
+
+Date: 2017-08-23 22:28:40
+Level: ERROR
+Text: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '48' for key 'PRIMARY'
+#0 /home/bumer/www/php1.loc/blog/core/database/DBDriver.php(67): PDOStatement->execute(Array)
+#1 /home/bumer/www/php1.loc/blog/model/BaseModel.php(115): core\database\DBDriver->Insert('session', Array)
+#2 /home/bumer/www/php1.loc/blog/core/module/User.php(160): model\BaseModel->add(Array)
+#3 /home/bumer/www/php1.loc/blog/core/module/User.php(92): core\module\User->setSession(Array)
+#4 /home/bumer/www/php1.loc/blog/controller/UserController.php(46): core\module\User->login()
+#5 /home/bumer/www/php1.loc/blog/core/Application.php(74): controller\UserController->loginAction()
+#6 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#7 {main}
+*****************

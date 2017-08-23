@@ -119,12 +119,12 @@ class User
         if ($sid){
             $session = $this->mSession->getBySid($sid);
             $this->mSession->edit(['id' => $session[$this->mSession->id_name], 'updated_at' => date("Y-m-d H:i:s", time())]);
-            return true;
+            return $this->request->session->get('login');
         }
         
         if ($userLogin && $userLogin['password'] === $cookiePass) {
             $this->setSession($userLogin);
-            return true;
+            return $this->request->session->get('login');
         }
            
     }
