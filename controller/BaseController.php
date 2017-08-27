@@ -13,19 +13,14 @@ use core\Request,
     core\ServiceContainer,
     core\exception\PageNotFoundException;
 
-class BaseController
+abstract class BaseController
 {
 
     protected $title;
     protected $content;
-    protected $aside;
-    protected $user;
-    protected $login;
-    protected $menu;
     protected $request;
-    protected $priv_name;
-    protected $user_prives = [];
     protected $container;
+    protected $login;
 
 
 
@@ -35,10 +30,6 @@ class BaseController
         $this->request = $request;
         $this->title = '';
         $this->content = '';
-        $this->user_prives = $this->request->session->get('prives') ?? [];
-        $this->menu = $this->template('view_menu', [
-           'prives' => $this->user_prives,
-        ]);               
     }
 
     public function __call($name, $args)
@@ -48,16 +39,7 @@ class BaseController
 
     /* вывод шаблона страницы в браузере */
 
-    public function response()
-    {
-        echo $html = $this->template('view_main', [
-            'title' => $this->title,
-            'content' => $this->content,
-            'login' => $this->login,
-            'aside' => $this->aside,
-            'menu' => $this->menu
-        ]);
-    }
+    abstract public function response();
 
     /* ошибка 404 */
 

@@ -3,17 +3,15 @@
 namespace core\providers;
 
 use core\ServiceContainer,
-    controller\BaseController;
+    controller\client\PublicController;
 
 class ControllerProvider
 {
     public function register(ServiceContainer &$container)
     {
-        $container->register('controller.base', function($request) use ($container) {
-            return new BaseController($request, $container);
+        $container->register('controller.public', function($request) use ($container) {
+            return new PublicController($request, $container);
         });
         
     }
 }
-
-//new BaseController($request, $container)

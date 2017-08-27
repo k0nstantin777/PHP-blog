@@ -85,4 +85,6 @@ class PrivModel extends BaseModel
         
         return $prives;
     }
+    
+    
 }

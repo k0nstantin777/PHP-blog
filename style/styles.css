@@ -91,6 +91,8 @@ a.option.back:hover {color: #000033}
 article a.add {background-color: #3399ff; font-size: 20px; padding: 7px; box-shadow: 1px 1px 4px 1px silver; border-radius: 5px; margin-left: 2px}
 article a.add:hover {background-color: #000066; transition: 0.6s ease-in-out }
 
+table th, td {padding:3px}
+table, th, td{border:1px solid silver}
 
 #form {margin: 10px 0 10px 0}
 #form input {margin: 5px 0 5px 0; }

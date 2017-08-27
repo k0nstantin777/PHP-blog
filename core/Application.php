@@ -9,11 +9,9 @@ use core\exception\PageNotFoundException,
     core\providers\ModelProvider,
     core\providers\UserProvider,
     core\providers\ErrorHandlerProvider,
-    core\providers\RequestProvider,
     core\providers\ControllerProvider,
     core\helper\Session,
-    core\helper\Cookie,
-    core\exception\ServiceProviderException;
+    core\helper\Cookie;
 
 /**
  * Application движок сайта
@@ -48,11 +46,10 @@ class Application
         $this->initRequest();
         $this->handlingUri();
         $this->container = new ServiceContainer($this->request);
-        (new ErrorHandlerProvider())->register($this->container);
         (new ControllerProvider())->register($this->container);
         (new UserProvider())->register($this->container);
         (new ModelProvider())->register($this->container); 
- 
+        (new ErrorHandlerProvider())->register($this->container);
     }
 
     /**
@@ -62,33 +59,33 @@ class Application
     public function run()
     {
         try {
-                                    
+                         
             if (!$this->controller) {
                 throw new PageNotFoundException();
             }
-
+            
             $ctrl = new $this->controller($this->request, $this->container);
-
+                      
             $action = $this->action;
-
+            
             $ctrl->$action();
 
             $ctrl->response();
         } catch (\PDOException $e) {
 
-            $this->container->get('errorHandler.logger', [$this->request])->handle($e, 'Ooooops... Something went wrong!');
+            $this->container->get('errorHandler.logger')->handle($ctrl, $e, 'Ooooops... Something went wrong!');
             
         } catch (PageNotFoundException $e) {
 
-            $this->container->get('errorHandler.screen', [$this->request])->handle($e, 'Error 404 - Page not found!');
+            $this->container->get('errorHandler.screen')->handle($ctrl, $e, 'Error 404 - Page not found!');
              
         } catch (AccessException $e) {
            
-            $this->container->get('errorHandler.screen', [$this->request])->handle($e, 'Access Denied!');
+            $this->container->get('errorHandler.screen')->handle($ctrl, $e, 'Access Denied!');
           
         } catch (\Exception $e) {
             
-            $this->container->get('errorHandler.logger', [$this->request])->handle($e, 'Ooooops... Something went wrong!');
+            $this->container->get('errorHandler.logger')->handle($ctrl, $e, 'Ooooops... Something went wrong!');
         } 
             
         
@@ -122,12 +119,21 @@ class Application
      */
     private function getController(array $uri)
     {
+        $isAdmin = false;
+	$path = 'client\\';      
         $controller = $uri[0] ?? DEFAULT_CONTROLLER;
+
+        if ($controller === 'admin') {
+            $isAdmin = true;
+            $controller = $uri[1] ?? DEFAULT_CONTROLLER;
+        }
+        
+        
 
         switch ($controller) {
             case 'post':
             case 'posts':
-            case 'edit':
+            case 'post_edit':
             case 'add':
             case 'delete':
                 $controller = 'Post';
@@ -135,6 +141,12 @@ class Application
             case 'login':
             case 'unlogin':    
             case 'reg':
+            case 'users':
+            case 'user':
+            case 'user_edit':
+            case 'user_add':
+            case 'user_delete':
+            case 'privs':
                 $controller = 'User';
                 break;
 
@@ -145,8 +157,13 @@ class Application
                 $controller = false;
                 break;
         }
-
-        return $controller ? sprintf('controller\%sController', $controller) : false;
+        
+        if ($isAdmin) {
+            $controller = "Admin{$controller}";
+            $path = 'admin\\';
+        }
+        
+        return $controller ? sprintf('controller\%sController', $path.$controller) : false;
     }
 
     /**
@@ -157,6 +174,10 @@ class Application
      */
     private function getAction(array $uri)
     {
+        if (isset($uri[0]) && $uri[0] === 'admin'){
+            return sprintf('%sAction', $uri[1] ?? 'index');
+        }
+        
         return sprintf('%sAction', $uri[0] ?? 'index');
     }
 
@@ -184,8 +205,12 @@ class Application
      */
     private function setIdFromUri(array $uri)
     {
+        if (isset($uri[0]) && $uri[0] === 'admin' && isset($uri[2])){
+            return $this->request->get['id'] = $uri[2];
+        }
+        
         if (isset($uri[1])) {
-            $this->request->get['id'] = $uri[1];
+            return $this->request->get['id'] = $uri[1];
         }
     }
 

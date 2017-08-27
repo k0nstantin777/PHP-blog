@@ -56,7 +56,13 @@ class UserModel extends BaseModel
 				'type' => 'string',
 				'length' => 20,
 				'require' => false
+  			],
+                        
+                        'id_role' => [
+				'type' => 'integer',
+				'require' => false
   			]
+                        
         
                 ]);
         
@@ -83,6 +89,16 @@ class UserModel extends BaseModel
     public function getByLogin($login)
     {
         return $this->db->Query("SELECT * FROM {$this->table} WHERE login = :login", ['login' => $login], DBDriver::FETCH_ONE);
+    } 
+    
+    /**
+     * Получение роли юзера по $login
+     * @param string $login
+     * @return array
+     */
+    public function getRoleByLogin($login)
+    {
+        return $this->db->Query("SELECT r.* FROM {$this->table} AS u JOIN roles AS r ON u.id_role = r.id WHERE login = :login", ['login' => $login], DBDriver::FETCH_ONE);
     } 
               
 }

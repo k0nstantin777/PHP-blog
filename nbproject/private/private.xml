@@ -11,6 +11,21 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/home/bumer/www/php1.loc/blog/controller/admin/AdminController.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/controller/client/PageController.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/view/admin/view_index.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/view/view_main.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/core/providers/ControllerProvider.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/view/admin/view_users.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/controller/admin/AdminPostController.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/core/error_handler/ErrorHandler.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/core/Application.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/view/admin/view_post_edit.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/view/admin/view_user.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/controller/admin/AdminUserController.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/controller/client/PostController.php</file>
+            <file>file:/home/bumer/www/php1.loc/blog/core/providers/ErrorHandlerProvider.php</file>
+        </group>
     </open-files>
 </project-private>

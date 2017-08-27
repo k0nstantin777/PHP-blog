@@ -6,15 +6,14 @@
  * @author Noskov Konstantin <noskov.kos@gmail.com>
  */
 
-namespace controller;
+namespace controller\client;
 
-use controller\BaseController,
-    core\Request,
-    core\ServiceContainer,
-    core\exception\UserException;
+use core\Request;
+use core\ServiceContainer;
+use core\exception\UserException;
 
 
-class UserController extends BaseController {
+class UserController extends PublicController {
          
     /**
      * Объект класса UserModel
@@ -98,5 +97,6 @@ class UserController extends BaseController {
         header("Location: ".BASE_PATH);
         exit();
     }
-  
+    
+      
 }

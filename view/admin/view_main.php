@@ -15,41 +15,33 @@
 				<div class="wrapper">
 					<div class="logo"></div>
 					<div class="slogan">
-						<div class="title">Блог по основам PHP</div>
-						<div class="subtitle">Основы языка программирования PHP</div>
+						<div class="title">Админка</div>
+						
 					</div>
 					
                                         <div class="current_user"><span>User <span class="fa fa-user fa-fw"></span></span> : <i> <?=$login?></i></div>
                                         <div id="user_menu">
                                             <div class="user_menu">
                                             <?php if (in_array('access_admin_console', $prives)):?>
-                                                <a href="<?=BASE_PATH?>admin">Админка</a> <span>|</span>
-                                            <?php endif;?>
+                                                <a href="<?=BASE_PATH?>">Блог</a> <span>|</span>
+                                            <?php endif;?>    
                                             <?php if ($login !== 'Гость'):?>
                                                 <a href="<?=BASE_PATH?>unlogin">Выйти</a> 
                                             <?php else: ?>
                                                 <a href="<?=BASE_PATH?>login">Вход </a><span>|</span><a href="<?=BASE_PATH?>reg"> Регистрация</a>  
-                                            <?php endif;?>
-                                            
+                                            <?php endif;?> 
                                             </div>
                                         </div>     
                                 </div>
                         </div>		
 			
-			<?=$menu?>
+		
                         
 		</header>
 		<section>
 			<div class="content line">
 				<div class="wrapper">
-<!--					<div class="stars">
-						<div class="item"><div class="text">Лучшие<br> цены!</div></div>
-						<div class="item"><div class="text">Качественный<br> товар!</div></div>
-						<div class="item"><div class="text">Доставка в<br> день заказа!</div></div>
-						<div class="item"><div class="text">Скидки<br> оптовикам!</div></div>
-						<div class="clear"></div>
-					</div>-->
-					<?=$aside?>
+					<?=$aside ?>				
 					<section class="right">
 						<?=$content?>
 					</section>

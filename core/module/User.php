@@ -10,7 +10,10 @@ namespace core\module;
 use model\UserModel,
     model\SessionModel,
     model\PrivModel,
+    model\RoleModel,
+    model\Privs_to_RolesModel,
     core\exception\UserException,
+    core\exception\FormException,
     core\database\DBDriver,
     core\database\DB,
     core\Request,
@@ -27,13 +30,19 @@ class User
     
     private $mPriv;
     
+    private $mRole;
+    
+    private $mPrives_to_Roles;
+       
     private $request;
     
-    public function __construct(Request $request, UserModel $mUser, SessionModel $mSession, PrivModel $mPriv)
+    public function __construct(Request $request, UserModel $mUser, SessionModel $mSession, PrivModel $mPriv, RoleModel $mRole, Privs_to_RolesModel $mPrivs_to_Roles)
     {
         $this->mUser = $mUser;
         $this->mSession = $mSession;
         $this->mPriv = $mPriv;
+        $this->mRole = $mRole;
+        $this->mPrives_to_Roles = $mPrivs_to_Roles;
         $this->request = $request;
     }
 
@@ -45,7 +54,7 @@ class User
      */
     public function registration()
     {
-        $hash_form = md5('login'.'password'.'submit');
+        $hash_form = md5('login'.'password'.'role'.'submit');
         if ($hash_form !== md5(implode(array_keys($this->request->post)))){
             throw new UserException([], 'Не пытайтесь подделать форму!');
         }
@@ -59,7 +68,13 @@ class User
         $password = $this->myCrypt($this->request->post['password']);
 
         try {
-            return $this->mUser->add(['login' => $this->request->post['login'], 'password' => $password, 'uncryptPass' => $uncryptPass]);
+            return $this->mUser->add(
+                                      [
+                                        'login' => $this->request->post['login'],
+                                        'password' => $password,
+                                        'uncryptPass' => $uncryptPass,
+                                        'id_role'=> $this->request->post['role']
+                                      ]);
         } catch (ValidatorException $e) {
             throw new UserException($e->getErrors(), $e->getMessage(), $e->getCode(), $e);
         }
@@ -176,6 +191,69 @@ class User
         $this->request->session->delete('prives');
         $this->request->cookie->delete('login');
         $this->request->cookie->delete('password');
+    }
+    
+    /**
+     * Редактирование пользователя
+     * @param array $user
+     * @return void
+     * @throws FormException
+     * @throws UserException
+     */
+    public function edit ($user)
+    {
+        $hash_form = md5('id'.'login'.'password'.'new_password'.'role'.'submit'.$user['id_user'].$user['password']);
+        if ($hash_form !== md5(implode(array_keys($this->request->post)). $this->request->post['id'].$this->request->post['password'] )){
+                    throw new FormException('Не пытайтесь подделать форму!');
+        }
+
+        $params = [
+                    'id_user' => $this->request->post['id'],
+                    'login' => $this->request->post['login'],
+                    'id_role' => $this->request->post['role']
+                  ];
+        
+        //изменение пароля
+        if (!empty($this->request->post['new_password'])){
+            $password = $this->myCrypt($this->request->post['new_password']); 
+            $uncryptPass = $this->request->post['new_password']; //пароль в чистом виде для валидации
+            $params['password'] = $password;
+            $params['uncryptPass'] = $uncryptPass;
+        }
+        
+                
+        try {
+            $this->mUser->edit($params);
+        } catch (ValidatorException $e) {
+            throw new UserException($e->getErrors(), $e->getMessage(), $e->getCode(), $e);
+        }
+ 
+    }
+    
+    /**
+     * Установка привилегий для ролей
+     */
+    public function setPrives()
+    {
+        $this->mPrives_to_Roles->delAll();            
+        foreach ($this->request->post as $key => $value){
+            $arr = explode(':', $key);
+            $rules = ['id_priv' => $arr[0], 'id_role'=> $value];
+            $this->mPrives_to_Roles->setPrivesToRoles ($rules);
+        }   
+    }
+    
+    /**
+     * Получение данных из различных моделей для заполнения полей формы
+     * @return array
+     */
+    public function getFields ()
+    {
+        return [
+            'roles' => $this->mRole->getAll('id'),
+            'privs_to_roles' => $this->mPrives_to_Roles->getAllPrivsAsKeyToRoleArr(),
+            'privs' => $this->mPriv->getAll(),
+        ];
     }
     
     /**

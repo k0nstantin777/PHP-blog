@@ -14,7 +14,9 @@ class UserProvider
                 $request,
                 $container->get('model.user'),
                 $container->get('model.session'),
-                $container->get('model.priv')
+                $container->get('model.priv'), 
+                $container->get('model.role'),
+                $container->get('model.privs_to_roles')
             );
         });
                         
