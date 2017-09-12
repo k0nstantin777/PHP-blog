@@ -4,12 +4,13 @@ namespace core;
 
 use core\exception\PageNotFoundException,
     core\exception\AccessException,
-    core\exception\BaseException,
     core\ServiceContainer,
     core\providers\ModelProvider,
     core\providers\UserProvider,
     core\providers\ErrorHandlerProvider,
     core\providers\ControllerProvider,
+    core\providers\RouterProvider,
+    core\providers\ResponseProvider,
     core\helper\Session,
     core\helper\Cookie;
 
@@ -27,29 +28,30 @@ class Application
      */
     public $request;
 
-    /**
-     * Класс контроллера
-     * @var stirng 
-     */
-    private $controller;
-
-    /**
-     * Вызываемый метод контроллера
-     * @var string
-     */
-    private $action;
-    
     private $container;
+    
+    /**
+     * router
+     * @var type 
+     */
+    private $router;
+    
+    private $response;
 
     public function __construct()
     {
         $this->initRequest();
-        $this->handlingUri();
+        
         $this->container = new ServiceContainer($this->request);
         (new ControllerProvider())->register($this->container);
+        (new RouterProvider())->register($this->container);
+        (new ResponseProvider())->register($this->container);
         (new UserProvider())->register($this->container);
         (new ModelProvider())->register($this->container); 
         (new ErrorHandlerProvider())->register($this->container);
+        $this->response = $this->container->get('module.response', [$this->request]);
+        $this->router = $this->container->get('module.router', [$this->response]);
+        $this->router->setRoutes();
     }
 
     /**
@@ -59,25 +61,20 @@ class Application
     public function run()
     {
         try {
-                         
-            if (!$this->controller) {
-                throw new PageNotFoundException();
+    
+            $route = $this->router->run($this->request->server['REQUEST_METHOD'], $this->request->get['q']);
+            
+            if ($route){
+                $arr = explode('|', $route);
+                $this->response->send ($arr[0], $arr[1]);
             }
-            
-            $ctrl = new $this->controller($this->request, $this->container);
-                      
-            $action = $this->action;
-            
-            $ctrl->$action();
-
-            $ctrl->response();
+                        
         } catch (\PDOException $e) {
-
+            $ctrl = $this->container->get('controller.public');
             $this->container->get('errorHandler.logger')->handle($ctrl, $e, 'Ooooops... Something went wrong!');
             
         } catch (PageNotFoundException $e) {
-
-            $this->container->get('errorHandler.screen')->handle($ctrl, $e, 'Error 404 - Page not found!');
+            $this->container->get('errorHandler.screen', [$this->response])->handle($e, 'Error 404 - Page not found!');
              
         } catch (AccessException $e) {
            
@@ -98,120 +95,4 @@ class Application
     {
         $this->request = new Request($_GET, $_POST, $_FILES, new Cookie(), $_SERVER, new Session());
     }
-
-    /**
-     * Обработка запроса в адресной строке
-     */
-    private function handlingUri()
-    {
-        $arr = $this->getUriAsArr();
-
-        $this->setIdFromUri($arr);
-        $this->controller = $this->getController($arr);
-        $this->action = $this->getAction($arr);
-    }
-
-    /**
-     * Получение класса контроллера
-     * @param array $uri URL отформатированный в массив
-     * 
-     * @return string
-     */
-    private function getController(array $uri)
-    {
-        $isAdmin = false;
-	$path = 'client\\';      
-        $controller = $uri[0] ?? DEFAULT_CONTROLLER;
-
-        if ($controller === 'admin') {
-            $isAdmin = true;
-            $controller = $uri[1] ?? DEFAULT_CONTROLLER;
-        }
-        
-        
-
-        switch ($controller) {
-            case 'post':
-            case 'posts':
-            case 'post_edit':
-            case 'add':
-            case 'delete':
-                $controller = 'Post';
-                break;
-            case 'login':
-            case 'unlogin':    
-            case 'reg':
-            case 'users':
-            case 'user':
-            case 'user_edit':
-            case 'user_add':
-            case 'user_delete':
-            case 'privs':
-                $controller = 'User';
-                break;
-
-            case 'contacts':
-                $controller = 'Page';
-                break;
-            default:
-                $controller = false;
-                break;
-        }
-        
-        if ($isAdmin) {
-            $controller = "Admin{$controller}";
-            $path = 'admin\\';
-        }
-        
-        return $controller ? sprintf('controller\%sController', $path.$controller) : false;
-    }
-
-    /**
-     * Получение метода контроллера
-     * @param array $uri URL отформатированный в массив
-     * 
-     * @return string
-     */
-    private function getAction(array $uri)
-    {
-        if (isset($uri[0]) && $uri[0] === 'admin'){
-            return sprintf('%sAction', $uri[1] ?? 'index');
-        }
-        
-        return sprintf('%sAction', $uri[0] ?? 'index');
-    }
-
-    /**
-     * Преобразование строки запроса клиента в массив
-     * 
-     * @return array
-     */
-    private function getUriAsArr()
-    {
-        $uri = explode('/', $this->request->get['q']);
-        $uri_cnt = count($uri);
-
-        if ($uri[$uri_cnt - 1] == '') {
-            unset($uri[$uri_cnt - 1]);
-        }
-        return $uri;
-    }
-
-    /**
-     * Получение идентификатора запрашиваемой страницы
-     * @param array $uri URL отформатированный в массив
-     * 
-     * @return integer get['id']
-     */
-    private function setIdFromUri(array $uri)
-    {
-        if (isset($uri[0]) && $uri[0] === 'admin' && isset($uri[2])){
-            return $this->request->get['id'] = $uri[2];
-        }
-        
-        if (isset($uri[1])) {
-            return $this->request->get['id'] = $uri[1];
-        }
-    }
-
 }

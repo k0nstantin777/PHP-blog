@@ -1,6 +1,8 @@
 <?php
 
 namespace core\error_handler;
+
+use core\ResponseInterface;
   
 
 /**
@@ -14,13 +16,14 @@ class ErrorHandler implements ErrorHandlerInterface
     private $logger;
     private $dev;
 
-    public function __construct(Logger $logger = null, $dev = true)
+    public function __construct(ResponseInterface $response, Logger $logger = null, $dev = true)
     {
         $this->logger = $logger;
         $this->dev = $dev;
+        $this->response = $response;
     }
 
-    public function handle($ctrl, \Exception $e, $message)
+    public function handle(\Exception $e, $message)
     {
         if (isset($this->logger)) {
             $this->logger->write(sprintf("%s\n%s", $e->getMessage(), $e->getTraceAsString()), 'ERROR');
@@ -32,8 +35,10 @@ class ErrorHandler implements ErrorHandlerInterface
             $msg = sprintf('%s<h2>%s</h2><p>%s</p>', $msg, $e->getMessage(), $e->getTraceAsString());
         }
         
-        $ctrl->er404Action($msg);
-        $ctrl->response();
+        $this->response->send('public', 'er404');
+        
+//        $ctrl->er404Action($msg);
+//        $ctrl->response();
     }
 
 }
