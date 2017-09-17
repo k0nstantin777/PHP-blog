@@ -900,3 +900,81 @@ Text: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '14'
 #6 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
 #7 {main}
 *****************
+
+Date: 2017-09-17 14:53:14
+Level: ERROR
+Text: Доступ запрещен
+#0 [internal function]: controller\admin\AdminUserController->editAction()
+#1 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#2 /home/bumer/www/php1.loc/blog/core/router/Router.php(143): core\Response->send('admin.user', 'edit', Array)
+#3 [internal function]: core\router\Router->core\router\{closure}('4')
+#4 /home/bumer/www/php1.loc/blog/core/router/Router.php(66): call_user_func_array(Object(Closure), Array)
+#5 /home/bumer/www/php1.loc/blog/core/Application.php(65): core\router\Router->run('GET', 'admin/user_edit...')
+#6 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#7 {main}
+*****************
+
+Date: 2017-09-17 14:55:57
+Level: ERROR
+Text: Доступ запрещен
+#0 [internal function]: controller\admin\AdminUserController->editAction()
+#1 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#2 /home/bumer/www/php1.loc/blog/core/router/Router.php(143): core\Response->send('admin.user', 'edit', Array)
+#3 [internal function]: core\router\Router->core\router\{closure}('4')
+#4 /home/bumer/www/php1.loc/blog/core/router/Router.php(66): call_user_func_array(Object(Closure), Array)
+#5 /home/bumer/www/php1.loc/blog/core/Application.php(65): core\router\Router->run('GET', 'admin/user_edit...')
+#6 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#7 {main}
+*****************
+
+Date: 2017-09-17 14:58:55
+Level: ERROR
+Text: Доступ запрещен
+#0 [internal function]: controller\admin\AdminUserController->editAction()
+#1 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#2 /home/bumer/www/php1.loc/blog/core/router/Router.php(143): core\Response->send('admin.user', 'edit', Array)
+#3 [internal function]: core\router\Router->core\router\{closure}('4')
+#4 /home/bumer/www/php1.loc/blog/core/router/Router.php(66): call_user_func_array(Object(Closure), Array)
+#5 /home/bumer/www/php1.loc/blog/core/Application.php(65): core\router\Router->run('GET', 'admin/user_edit...')
+#6 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#7 {main}
+*****************
+
+Date: 2017-09-17 14:59:28
+Level: ERROR
+Text: Доступ запрещен
+#0 [internal function]: controller\admin\AdminUserController->editAction()
+#1 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#2 /home/bumer/www/php1.loc/blog/core/router/Router.php(143): core\Response->send('admin.user', 'edit', Array)
+#3 [internal function]: core\router\Router->core\router\{closure}('4')
+#4 /home/bumer/www/php1.loc/blog/core/router/Router.php(66): call_user_func_array(Object(Closure), Array)
+#5 /home/bumer/www/php1.loc/blog/core/Application.php(65): core\router\Router->run('GET', 'admin/user_edit...')
+#6 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#7 {main}
+*****************
+
+Date: 2017-09-17 15:00:22
+Level: ERROR
+Text: Доступ запрещен
+#0 [internal function]: controller\admin\AdminUserController->editAction()
+#1 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#2 /home/bumer/www/php1.loc/blog/core/router/Router.php(143): core\Response->send('admin.user', 'edit', Array)
+#3 [internal function]: core\router\Router->core\router\{closure}('4')
+#4 /home/bumer/www/php1.loc/blog/core/router/Router.php(66): call_user_func_array(Object(Closure), Array)
+#5 /home/bumer/www/php1.loc/blog/core/Application.php(65): core\router\Router->run('GET', 'admin/user_edit...')
+#6 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#7 {main}
+*****************
+
+Date: 2017-09-17 15:00:41
+Level: ERROR
+Text: Доступ запрещен
+#0 [internal function]: controller\admin\AdminUserController->editAction()
+#1 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#2 /home/bumer/www/php1.loc/blog/core/router/Router.php(143): core\Response->send('admin.user', 'edit', Array)
+#3 [internal function]: core\router\Router->core\router\{closure}('4')
+#4 /home/bumer/www/php1.loc/blog/core/router/Router.php(66): call_user_func_array(Object(Closure), Array)
+#5 /home/bumer/www/php1.loc/blog/core/Application.php(65): core\router\Router->run('GET', 'admin/user_edit...')
+#6 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#7 {main}
+*****************

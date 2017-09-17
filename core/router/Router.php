@@ -33,6 +33,11 @@ class Router
        
     }
 
+    /**
+     * Регистрация маршрутов при заходе методом GET
+     * @param string $route
+     * @param string $action
+     */
     public function get(string $route, $action)
     {
         $method = self::METHOD_GET;
@@ -43,6 +48,11 @@ class Router
         $this->storage[$method][$this->parser->clean]['params'] = $this->parser->params;
     }
 
+    /**
+     * Регистрация маршрутов при заходе методом POST
+     * @param string $route
+     * @param string $action
+     */
     public function post(string $route, $action)
     {
         $method = self::METHOD_POST;
@@ -52,6 +62,13 @@ class Router
         $this->storage[$method][$this->parser->clean]['params'] = $this->parser->params;
     }
 
+    /**
+     * Запуск обработчика маршрутов
+     * @param string $method
+     * @param string $uri
+     * @return \Closure
+     * @throws PageNotFoundException
+     */
     public function run(string $method, string $uri)
     {
         $methodRoutes = $this->storage[$method];
@@ -69,6 +86,9 @@ class Router
         return $route['action'];
     }
 
+    /**
+     * Установка маршрутов сайта
+     */
     public function setRoutes ()
     {
         $routes = [
@@ -212,6 +232,23 @@ class Router
                 'method' => self::METHOD_POST,
                 'route' => 'add',
                 'action' => 'post|add'
+            ],
+            25 => [
+                'method' => self::METHOD_GET,
+                'route' => 'admin/post/{id}',
+                'action' => function ($id){
+                                $this->response->send('admin.post', 'post', ['id' => $id]);
+                            }
+            ],
+            26 => [
+                'method' => self::METHOD_GET,
+                'route' => 'unlogin',
+                'action' => 'user|unlogin'
+            ],
+            27 => [
+                'method' => self::METHOD_GET,
+                'route' => 'admin/login',
+                'action' => 'admin.user|login'
             ],
         ];
         

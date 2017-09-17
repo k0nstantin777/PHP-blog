@@ -36,6 +36,10 @@ class Application
      */
     private $router;
     
+    /**
+     * Объект класса Response
+     * @var type 
+     */
     private $response;
 
     public function __construct()
@@ -70,19 +74,18 @@ class Application
             }
                         
         } catch (\PDOException $e) {
-            $ctrl = $this->container->get('controller.public');
-            $this->container->get('errorHandler.logger')->handle($ctrl, $e, 'Ooooops... Something went wrong!');
+            $this->container->get('errorHandler.logger', [$this->response])->handle($e, 'Ooooops... Something went wrong!');
             
         } catch (PageNotFoundException $e) {
             $this->container->get('errorHandler.screen', [$this->response])->handle($e, 'Error 404 - Page not found!');
              
         } catch (AccessException $e) {
            
-            $this->container->get('errorHandler.screen')->handle($ctrl, $e, 'Access Denied!');
+            $this->container->get('errorHandler.logger', [$this->response])->handle($e, 'Access Denied!');
           
         } catch (\Exception $e) {
             
-            $this->container->get('errorHandler.logger')->handle($ctrl, $e, 'Ooooops... Something went wrong!');
+            $this->container->get('errorHandler.logger', [$this->response])->handle($e, 'Ooooops... Something went wrong!');
         } 
             
         

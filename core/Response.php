@@ -24,28 +24,42 @@ class Response implements ResponseInterface
      * 
      * @return string
      */
-    public function send($controller = DEFAULT_CONTROLLER, $action = '', array $params = [], $header = 'HTTP/1.1 200 Ok')
+    public function send($controller = DEFAULT_CONTROLLER, $action = '', array $get_params = [], array $action_params = [], $header = 'HTTP/1.1 200 Ok')
     {
         $this->setHeader($header);
-        $this->setParams($params);
+        $this->setGetParams($get_params);
         $ctrl = $this->getController($controller);
         $act = $this->getAction($action);
-        $ctrl->$act();
+        call_user_func_array([$ctrl, $act], $action_params);
         $ctrl->response();
     }
     
+    /**
+     * Определение контроллера
+     * @param string $controller
+     * @return object
+     */
     public function getController (string $controller)
     {
         return $this->conteiner->get("controller.$controller", [$this->request]);
     }
     
+    /**
+     * Определение метода контроллера
+     * @param string $action
+     * @return string
+     */
     public function getAction (string $action)
     {
         $action != '' ?: $action = 'index';
         return sprintf('%sAction', $action);  
     }
     
-    public function setParams (array $params)
+    /**
+     * Установка Get параметров
+     * @param array $params
+     */
+    public function setGetParams (array $params)
     {
         foreach ($params as $key => $value){
             $this->request->get[$key] = $value;

@@ -13,6 +13,7 @@ use core\ServiceContainer;
 use core\exception\UserException;
 use core\exception\PageNotFoundException;
 use core\helper\ArrayHelper;
+use core\exception\AccessException;
 
 
 class AdminUserController extends AdminController {

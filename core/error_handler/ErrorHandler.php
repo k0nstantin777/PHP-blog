@@ -23,6 +23,11 @@ class ErrorHandler implements ErrorHandlerInterface
         $this->response = $response;
     }
 
+    /**
+     * Обработка вывода ошибки
+     * @param \Exception $e
+     * @param type $message
+     */
     public function handle(\Exception $e, $message)
     {
         if (isset($this->logger)) {
@@ -35,10 +40,23 @@ class ErrorHandler implements ErrorHandlerInterface
             $msg = sprintf('%s<h2>%s</h2><p>%s</p>', $msg, $e->getMessage(), $e->getTraceAsString());
         }
         
-        $this->response->send('public', 'er404');
+        $this->response->send('page', 'error', [], [$msg, $e->getMessage()], $this->setHeaderByCode($e->getCode()));
+    }
+    
+    /**
+     * Установка ответа сервера по коду исключения
+     * @param type $code
+     * @return string
+     */
+    private function setHeaderByCode($code)
+    {
+        switch ($code){
+            case 404: $header = "HTTP/1.1 404 Not Found"; break;
+            case 403: $header = "HTTP/1.1 403 Forbidden"; break;
+            case 500: $header = "HTTP/1.1 500"; break;
+        }
         
-//        $ctrl->er404Action($msg);
-//        $ctrl->response();
+        return $header;
     }
 
 }

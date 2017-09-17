@@ -12,7 +12,7 @@ interface ResponseInterface
     
     public function getAction (string $action);
     
-    public function setParams (array $params);
+    public function setGetParams (array $params);
         
     /**
      * Установка заголовков ответа сервера
@@ -27,5 +27,5 @@ interface ResponseInterface
      *  
      * @return string
      */
-    public function send();
+    public function send($controller = DEFAULT_CONTROLLER, $action = '', array $get_params = [], array $action_params = [], $header = 'HTTP/1.1 200 Ok');
 }
