@@ -13,6 +13,7 @@ use core\ServiceContainer;
 use core\exception\UserException;
 use core\exception\PageNotFoundException;
 use core\helper\ArrayHelper;
+use core\exception\AccessException;
 
 
 class AdminUserController extends AdminController {
@@ -64,7 +65,7 @@ class AdminUserController extends AdminController {
     }
     
     /* регистрация нового пользователя */
-    public function user_addAction()
+    public function addAction()
     {
         $this->priv_name = 'add_user';
         
@@ -155,7 +156,7 @@ class AdminUserController extends AdminController {
     }
     
     /* страница редактрирование статьи /edit/id */
-    public function user_editAction()
+    public function editAction()
     {
         $this->priv_name = 'edit_user';
 
@@ -203,7 +204,7 @@ class AdminUserController extends AdminController {
         
     }
     
-    public function user_deleteAction()
+    public function deleteAction()
     {
         $this->priv_name = 'delete_user';
         

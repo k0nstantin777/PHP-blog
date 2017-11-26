@@ -34,5 +34,4 @@
     define('DEVELOP', true);
     
     define('LOG_DIR', __DIR__ . '/logs');
-    
-    
+      

@@ -11,15 +11,17 @@ class ErrorHandlerProvider
     public function register(ServiceContainer &$container)
     {
         
-        $container->register('errorHandler.logger', function()  {
+        $container->register('errorHandler.logger', function($response)  {
             return new ErrorHandler(
+                            $response,
                             new Logger('critical', LOG_DIR),
                             DEVELOP
                     );
         });
         
-        $container->register('errorHandler.screen', function()  {
+        $container->register('errorHandler.screen', function($response)  {
             return new ErrorHandler(
+                            $response,
                             null, 
                             DEVELOP
                     );

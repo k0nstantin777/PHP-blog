@@ -11,6 +11,7 @@ namespace controller\client;
 
 use core\Request;
 use core\ServiceContainer;
+use core\helper\ArrayHelper;
 
 class PageController extends PublicController  {
   
@@ -22,6 +23,9 @@ class PageController extends PublicController  {
                
     }  
     
+    /**
+     * Шаблон страницы Контакты (/contacts)
+     */
     public function contactsAction ()
     {
        
@@ -31,6 +35,22 @@ class PageController extends PublicController  {
 
     }
     
-   
+    /**
+     * вывод сообщений об ошибках
+     * @param string $msg
+     * @param string $title
+     * @param string $view_template
+     */
+    public function errorAction($msg, $title, $view_template = '404')
+    {
+        $this->title = $title;
+        $this->menu = '';
+        $this->content = $this->template($view_template, 
+                                                         [
+                                                            'msg' => $msg,
+                                                            'back' => ArrayHelper::get($this->request->server, 'HTTP_REFERER', BASE_PATH),        
+                                                         ]);
+        $this->login = $this->request->session->get('login') ?: 'Гость';
+    }
     
 }

@@ -25,7 +25,6 @@ class PublicController extends BaseController
     {
         parent::__construct($request, $container);
 
-        //$this->rightBlock = $this->render('right.html.php');
         $this->user_prives = $this->request->session->get('prives') ?? [];
         $this->menu = $this->template('view_menu', [
            'prives' => $this->user_prives,

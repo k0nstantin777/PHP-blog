@@ -41,16 +41,6 @@ abstract class BaseController
 
     abstract public function response();
 
-    /* ошибка 404 */
-
-    public function er404Action($msg)
-    {
-        $this->title = 'Ошибка 404';
-        $this->content = $this->template('404', ['msg' => $msg]);
-        $this->login = $this->request->session->get('login') ?: 'Гость';
-        header("HTTP/1.1 404 Not Found");
-    }
-
     /* подключение шаблона страницы */
 
     protected function template($path, $vars = [])
