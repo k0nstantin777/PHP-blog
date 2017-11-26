@@ -1,10 +1,7 @@
 <?php
 
 namespace core\error_handler;
-
-use controller\BaseController;
-    
-    
+  
 
 /**
  * Description of ErrorHandler
@@ -14,18 +11,16 @@ use controller\BaseController;
 class ErrorHandler implements ErrorHandlerInterface
 {
 
-    private $ctrl;
     private $logger;
     private $dev;
 
-    public function __construct(BaseController $ctrl, Logger $logger = null, $dev = true)
+    public function __construct(Logger $logger = null, $dev = true)
     {
-        $this->ctrl = $ctrl;
         $this->logger = $logger;
         $this->dev = $dev;
     }
 
-    public function handle(\Exception $e, $message)
+    public function handle($ctrl, \Exception $e, $message)
     {
         if (isset($this->logger)) {
             $this->logger->write(sprintf("%s\n%s", $e->getMessage(), $e->getTraceAsString()), 'ERROR');
@@ -36,9 +31,9 @@ class ErrorHandler implements ErrorHandlerInterface
         if ($this->dev) {
             $msg = sprintf('%s<h2>%s</h2><p>%s</p>', $msg, $e->getMessage(), $e->getTraceAsString());
         }
-
-        $this->ctrl->er404Action($msg);
-        $this->ctrl->response();
+        
+        $ctrl->er404Action($msg);
+        $ctrl->response();
     }
 
 }

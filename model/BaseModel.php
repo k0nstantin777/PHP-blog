@@ -38,18 +38,11 @@ abstract class BaseModel
      * @var ValidatorInterface 
      */
     public $validator;
-    
-    /**
-     * схема полей данных формы
-     * @var array 
-     */
-    protected $schema;
-   
+           
     public function __construct(DBDriverInterface $db, ValidatorInterface $validator)
     {
         $this->db = $db;
         $this->validator = $validator;
-        
     }
 
     /**
@@ -57,9 +50,15 @@ abstract class BaseModel
      * 
      * @return array
      */
-    public function getAll()
+    public function getAll($sort = '')
     {
-        return $this->db->Query("SELECT * FROM {$this->table} ORDER BY dt DESC");
+        $order='';
+        if ($sort == 'new'){
+            $order = 'ORDER BY dt DESC';
+        } elseif ($sort == 'id'){
+            $order = "ORDER BY {$this->id_name} ASC";
+        }
+        return $this->db->Query("SELECT * FROM {$this->table} $order");
     }
 
     /**
@@ -125,9 +124,9 @@ abstract class BaseModel
     public function edit(array $params)
     {
         $this->validator->run($params);
-        
+       
         $id = $params[$this->id_name];
-              
+        
         if (!empty($this->validator->errors)) {
             throw new ValidatorException($this->validator->errors);
         } 
@@ -135,13 +134,4 @@ abstract class BaseModel
         return $this->db->Update("$this->table", $this->validator->clean, "{$this->id_name} = :id", ['id' => $id]);
     }
     
-    public function setSchema($schema)
-    {
-        return $this->schema = $schema;
-    }
-    
-    public function getSchema ()
-    {
-        return $this->schema;
-    }
 }

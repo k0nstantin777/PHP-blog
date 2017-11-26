@@ -7,7 +7,7 @@ namespace core\exception;
  *
  * @author Noskov Konstantin <noskov.kos@gmail.com>
  */
-class PostException extends BaseException
+class FormException extends BaseException
 {
     public function __construct($message = '', $code = 403, \Exception $previus = null)
     {

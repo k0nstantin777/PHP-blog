@@ -7,11 +7,12 @@
  * @author bumer
  */
 
-namespace controller;
+namespace controller\client;
 
-use core\Request, core\ServiceContainer;
+use core\Request;
+use core\ServiceContainer;
 
-class PageController extends BaseController  {
+class PageController extends PublicController  {
   
     public function __construct(Request $request, ServiceContainer $container)
     {

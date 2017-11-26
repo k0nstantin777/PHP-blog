@@ -4,26 +4,22 @@ namespace core\providers;
 
 use core\ServiceContainer,
     core\error_handler\ErrorHandler,
-    core\error_handler\Logger,
-    controller\BaseController;
+    core\error_handler\Logger;
 
 class ErrorHandlerProvider
 {
     public function register(ServiceContainer &$container)
     {
         
-        $container->register('errorHandler.logger', function($request) use ($container) {
+        $container->register('errorHandler.logger', function()  {
             return new ErrorHandler(
-                            $container->get('controller.base', [$request]),
                             new Logger('critical', LOG_DIR),
                             DEVELOP
                     );
         });
         
-        $container->register('errorHandler.screen', function($request) use ($container)  {
+        $container->register('errorHandler.screen', function()  {
             return new ErrorHandler(
-                            //$container->get('controller.base', [$request])
-                            $container->get('controller.base', [$request]),
                             null, 
                             DEVELOP
                     );

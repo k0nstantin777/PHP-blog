@@ -2,7 +2,7 @@
 
 namespace core\error_handler;
 
-use controller\BaseController;
+use controller\client\PublicController;
     
 
 /**
@@ -13,8 +13,8 @@ use controller\BaseController;
 interface ErrorHandlerInterface
 {
 
-    public function __construct(BaseController $ctrl, Logger $logger = null, $dev = true);
+    public function __construct(Logger $logger = null, $dev = true);
 
-    public function handle(\Exception $e, $message);
+    public function handle($ctrl,\Exception $e, $message);
     
 }

@@ -8,6 +8,7 @@ use core\ServiceContainer,
     model\SessionModel,
     model\PrivModel,
     model\RoleModel,
+    model\Privs_to_RolesModel,
     core\database\DB,
     core\database\DBDriver,
     core\module\Validator;
@@ -49,6 +50,13 @@ class ModelProvider
         
         $container->register('model.role', function() use ($driver, $validator) {
             return new RoleModel(
+                    $driver,
+                    new Validator()
+            );
+        });
+        
+         $container->register('model.privs_to_roles', function() use ($driver, $validator) {
+            return new Privs_to_RolesModel(
                     $driver,
                     new Validator()
             );
