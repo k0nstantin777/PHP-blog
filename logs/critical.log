@@ -978,3 +978,179 @@ Text: Доступ запрещен
 #6 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
 #7 {main}
 *****************
+
+Date: 2017-09-18 15:04:03
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-09-18 15:04:04
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-09-18 15:06:36
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-09-18 15:06:37
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-09-18 15:14:05
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-09-18 15:14:06
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-09-18 15:14:39
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-09-18 15:14:40
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-09-18 15:14:41
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-09-18 15:14:43
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-09-18 15:14:44
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-09-18 15:15:18
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-09-18 15:16:19
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-09-18 15:16:20
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-09-18 15:18:20
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************
+
+Date: 2017-09-18 15:18:21
+Level: ERROR
+Text: Error
+#0 /home/bumer/www/php1.loc/blog/controller/client/AjaxController.php(38): model\UserModel->getValidFields(Array)
+#1 [internal function]: controller\client\AjaxController->checkLoginAction()
+#2 /home/bumer/www/php1.loc/blog/core/Response.php(33): call_user_func_array(Array, Array)
+#3 /home/bumer/www/php1.loc/blog/core/Application.php(73): core\Response->send('ajax', 'checkLogin')
+#4 /home/bumer/www/php1.loc/blog/index.php(9): core\Application->run()
+#5 {main}
+*****************

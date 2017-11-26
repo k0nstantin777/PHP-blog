@@ -9,6 +9,7 @@ use controller\admin\AdminPostController;
 use controller\admin\AdminUserController;
 use controller\client\UserController;
 use controller\client\PageController;
+use controller\client\AjaxController;
 
 class ControllerProvider
 {
@@ -26,6 +27,9 @@ class ControllerProvider
         });
         $container->register('controller.page', function($request) use ($container) {
             return new PageController($request, $container);
+        });
+        $container->register('controller.ajax', function($request) use ($container) {
+            return new AjaxController($request, $container);
         });
         $container->register('controller.admin.post', function($request) use ($container) {
             return new AdminPostController($request, $container);

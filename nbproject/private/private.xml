@@ -11,15 +11,6 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/home/bumer/www/php1.loc/blog/core/providers/RouterProvider.php</file>
-            <file>file:/home/bumer/www/php1.loc/blog/core/providers/UserProvider.php</file>
-            <file>file:/home/bumer/www/php1.loc/blog/core/Application.php</file>
-            <file>file:/home/bumer/www/php1.loc/blog/core/router/Router.php</file>
-            <file>file:/home/bumer/www/php1.loc/blog/index.php</file>
-            <file>file:/home/bumer/www/php1.loc/blog/controller/BaseController.php</file>
-            <file>file:/home/bumer/www/php1.loc/blog/controller/client/PostController.php</file>
-            <file>file:/home/bumer/www/php1.loc/blog/core/providers/ControllerProvider.php</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

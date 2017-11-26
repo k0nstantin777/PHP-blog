@@ -10,7 +10,7 @@
         <?php endif; ?>
     /><br>
         <?php if (isset ($errors['login'])): ?>   
-           <p id="error"> <?=$errors['login']?></p>
+           <p id="error" class="login"> <?=$errors['login']?></p>
         <?php endif; ?> 
     <label for="password">Пароль</label><br> 
     <input type="password" name="password" id="password" value="<?=$post['password'] ?? ''?>"

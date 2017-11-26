@@ -250,6 +250,11 @@ class Router
                 'route' => 'admin/login',
                 'action' => 'admin.user|login'
             ],
+            28 => [
+                'method' => self::METHOD_POST,
+                'route' => 'ajax/login',
+                'action' => 'ajax|checkLogin'
+            ]
         ];
         
         for ($i = 0; $i < count($routes); $i++){
