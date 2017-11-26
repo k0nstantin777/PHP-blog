@@ -22,7 +22,7 @@
         
         <input type="submit" name="submit" id="submit" value="Добавить">
     </form><br>
-<a href="<?= explode('?', $back)[0] ?>" title="Назад" class="option back"><i class="fa fa-arrow-left"></i> </a>
+<a href="<?= $back?>" title="Назад" class="option back"><i class="fa fa-arrow-left"></i> </a>
 <p id="error"> <?=$msg ?? ''?></p> 
 
  

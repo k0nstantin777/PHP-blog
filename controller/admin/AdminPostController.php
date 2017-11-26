@@ -91,7 +91,7 @@ class AdminPostController extends AdminController
     }
     
     /* страница редактрирование статьи /edit/id */
-    public function post_editAction()
+    public function editAction()
     {
         $this->priv_name = 'edit_post';
 
